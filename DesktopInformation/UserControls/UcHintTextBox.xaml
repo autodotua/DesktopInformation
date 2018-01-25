@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="DesktopInformation.UserControls.UcHintTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DesktopInformation.UserControls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+>
+    <UserControl.Resources>
+        <sys:String x:Key="HintText" >提示文本</sys:String>
+        <AlignmentY x:Key="alignmentY">center</AlignmentY>
+    </UserControl.Resources>
+    
+    <TextBox x:Name="txt">
+        <TextBox.Resources>
+            <VisualBrush x:Key="HintTextBlock" TileMode="None" Opacity="0.5" Stretch="None" AlignmentX="Left" AlignmentY="{DynamicResource alignmentY}" >
+                <VisualBrush.Visual>
+                    <TextBlock Text="{DynamicResource HintText}"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </TextBox.Resources>
+        <TextBox.Style>
+            <Style TargetType="TextBox">
+                <Style.Triggers>
+                    <Trigger Property="Text" Value="{x:Null}">
+                        <Setter Property="Background" Value="{StaticResource HintTextBlock}"/>
+                    </Trigger>
+                    <Trigger Property="Text" Value="">
+                        <Setter Property="Background" Value="{StaticResource HintTextBlock}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </TextBox.Style>
+    </TextBox>
+
+</UserControl>
