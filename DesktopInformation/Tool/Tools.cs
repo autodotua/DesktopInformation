@@ -13,7 +13,7 @@ using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Security.Cryptography;
 
-namespace DesktopInformation.Tools
+namespace DesktopInformation.Tool
 {
     public static class Tools
     {

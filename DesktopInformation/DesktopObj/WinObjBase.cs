@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesktopInformation.Tool;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,32 +8,36 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Shell;
 using System.Windows.Threading;
 
 namespace DesktopInformation.DesktopObj
 {
-   interface IWinObjBase
-    {
-        void Update();
-    }
 
-    public abstract class WinObjBase:Window, IWinObjBase
+
+    public abstract class WinObjBase:Window
     {
         Properties.Settings set;
         public WinObjBase(Properties.Settings set):base()
         {
             this.set = set;
             WindowStyle = WindowStyle.None;
+            ShowInTaskbar = false;
             AllowsTransparency = true;
             Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            BorderBrush = new SolidColorBrush(Colors.DarkGray);
+            WindowChrome.SetWindowChrome(this, new WindowChrome()
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(4),
+            });
+            PreviewMouseLeftButtonDown+=(p1,p2) => DragMove(); 
             Loaded += (p1, p2) =>
               {
                   SetToStickOnDesktop();
                   SetToMouseThrough();
               };
-            timer.Interval = TimeSpan.FromMilliseconds(set.UpdateInterval);
-            timer.Tick += (p1, p2) => Update();
-            timer.Start();
+
         }
 
         protected WinObjBase()
@@ -81,12 +86,12 @@ namespace DesktopInformation.DesktopObj
         }
         #endregion
 
-        DispatcherTimer timer = new DispatcherTimer();
 
         public virtual void Update()
         {
-
+            DeviceInfo.Update();
         }
+        public abstract void Load(string text);
 
         private bool adjuesting;
         public bool Adjuest
@@ -109,6 +114,6 @@ namespace DesktopInformation.DesktopObj
             }
             get => adjuesting;
         }
-
+       public abstract DeviceInfo DeviceInfo { get; set; }
     }
 }

@@ -7,9 +7,9 @@ using System.Windows;
 
 namespace DesktopInformation.AddObjWindow
 {
-    interface IAddObjWindow
+    public abstract class AddObjWindowBase : Window
     {
-         string ObjValue { get;  set; }
-        string ObjName { get; set; }
+        public string ObjValue { get; set; }
+        public string ObjName { get; set; }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopInformation"
         mc:Ignorable="d"
-        Closing="Window_Closing"
+        Closing="WindowClosingEventHandler"
         Title="MainWindow" Height="350" Width="525">
     <Window.Resources>
         <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
@@ -60,7 +60,8 @@
             <RowDefinition Height="Auto"/>
 
         </Grid.RowDefinitions>
-        <ListView x:Name="lvw" ItemsSource="{Binding}"   ScrollViewer.CanContentScroll="False"
+        <ListView x:Name="lvw" ItemsSource="{Binding}"   ScrollViewer.CanContentScroll="False" PreviewMouseDoubleClick="LvwPreviewMouseDoubleClickEventHandler"
+                  SelectionChanged="LvwSelectionChangedEventHandler"
                       Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0">
 
             <ListView.View>
@@ -83,10 +84,13 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Content="编辑" Click="Button_Click_1"/>
-            <Button Grid.Column="3" Content="删除"/>
-            <Button Grid.Column="5" Content="添加" Click="Button_Click"/>
+            <Button x:Name="btnAdjust" Grid.Column="1" Content="调整" IsEnabled="False"  Click="BtnAdjustClickEventHandler"/>
+            <Button x:Name="btnEdit" Grid.Column="3" Content="编辑"  IsEnabled="False"  Click="BtnEditClickEventHandler"/>
+            <Button x:Name="btnDelete" Grid.Column="5" Content="删除"  IsEnabled="False" />
+            <Button x:Name="btnAdd" Grid.Column="7" Content="添加" Click="BtnAddClickEventHandler"/>
 
         </Grid>
         

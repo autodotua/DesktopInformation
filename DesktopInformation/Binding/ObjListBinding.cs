@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using static DesktopInformation.Enums;
-using static DesktopInformation.Tools.Tools;
+using static DesktopInformation.Tool.Tools;
 using static DesktopInformation.Properties.Resources;
 using static System.Environment;
 using System.Windows;
 using DesktopInformation.DesktopObj;
+using DesktopInformation.AddObjWindow;
 
 namespace DesktopInformation.Binding
 {
@@ -21,7 +22,6 @@ namespace DesktopInformation.Binding
         public ObjListBinding()
         {
         }
-
         public ObjListBinding(InfoType type, string name, string value, Statue statue)
         {
             this.type = type;
@@ -31,6 +31,7 @@ namespace DesktopInformation.Binding
         }
         public InfoType type;
         public Statue statue;
+        public string Tag;
         public string Type
         {
             get
@@ -70,6 +71,10 @@ namespace DesktopInformation.Binding
 
     }
 
+
+
+
+
     public class ObjListBindingHelper : IDisposable
     {
         ObservableCollection<ObjListBinding> listBinding;
@@ -96,16 +101,18 @@ namespace DesktopInformation.Binding
                 listBinding = new ObservableCollection<ObjListBinding>();
             }
             list.ItemsSource = listBinding;
+            manager.Load(listBinding.ToArray());
         }
 
         public ObjListBinding AddTextObject(string name, string value)
         {
             ObjListBinding newBinding = new ObjListBinding(InfoType.Text, name, value, Statue.Running);
+            newBinding.Tag = DateTime.Now.ToString();
             listBinding.Add(newBinding);
             return newBinding;
         }
 
-        public void OpenAddWindow(InfoType type)
+        public void OpenEditWindow(InfoType type)
         {
             dynamic win = null;
             ObjListBinding item = null;
@@ -125,6 +132,29 @@ namespace DesktopInformation.Binding
                 manager.Add(item);
             }
         }
+
+        public void OpenEditWindow(ObjListBinding item)
+        {
+           AddObjWindowBase  win = null;
+            switch (item.type)
+            {
+                case InfoType.Text:
+                    win = new WinAddTextObj(item.Name,item.Value);
+                    win.ShowDialog();
+                    if (win?.DialogResult == true)
+                    {
+                        item.Name = win.ObjName;
+                        item.Value = win.ObjValue;
+                    }
+                    break;
+            }
+            if (win?.DialogResult == true)
+            {
+                manager.RefreshAll();
+            }
+        }
+
+
 
         public void Dispose()
         {

@@ -34,5 +34,41 @@ namespace DesktopInformation.Properties {
                 this["UpdateInterval"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Intel[R] Dual Band Wireless-AC 7260")]
+        public string NetworkAdapter {
+            get {
+                return ((string)(this["NetworkAdapter"]));
+            }
+            set {
+                this["NetworkAdapter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("、")]
+        public string Spliter {
+            get {
+                return ((string)(this["Spliter"]));
+            }
+            set {
+                this["Spliter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ignoreAdministration {
+            get {
+                return ((bool)(this["ignoreAdministration"]));
+            }
+            set {
+                this["ignoreAdministration"] = value;
+            }
+        }
     }
 }

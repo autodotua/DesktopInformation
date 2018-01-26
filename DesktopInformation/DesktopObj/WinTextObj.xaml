@@ -8,7 +8,7 @@
         mc:Ignorable="d" Height="300" Width="300">
     <Grid>
         <Viewbox>
-            <TextBox x:Name="txt" Background="Transparent" BorderThickness="0" Foreground="White">Text</TextBox>
+            <TextBox x:Name="txt" Background="Transparent" BorderThickness="0" Foreground="White"/>
         </Viewbox>
     </Grid>
 </src:WinObjBase>
