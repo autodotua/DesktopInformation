@@ -12,7 +12,7 @@
         <AlignmentY x:Key="alignmentY">center</AlignmentY>
     </UserControl.Resources>
     
-    <TextBox x:Name="txt">
+    <TextBox x:Name="txt" VerticalContentAlignment="Center">
         <TextBox.Resources>
             <VisualBrush x:Key="HintTextBlock" TileMode="None" Opacity="0.5" Stretch="None" AlignmentX="Left" AlignmentY="{DynamicResource alignmentY}" >
                 <VisualBrush.Visual>

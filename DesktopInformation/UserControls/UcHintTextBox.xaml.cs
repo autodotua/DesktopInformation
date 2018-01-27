@@ -34,6 +34,10 @@ namespace DesktopInformation.UserControls
                 Resources["alignmentY"] = value ? AlignmentY.Top : AlignmentY.Center;
                 txt.AcceptsReturn = value;
             }
+            get
+            {
+               return txt.TextWrapping == System.Windows.TextWrapping.Wrap;
+            }
         }
         public VerticalAlignment TextVerticalContentAlignment
         {

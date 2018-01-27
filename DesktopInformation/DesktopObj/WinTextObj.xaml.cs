@@ -14,7 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DesktopInformation.Properties;
-using static DesktopInformation.Tool.Tools;
+using static DesktopInformation.Toolx.Tools;
+using static DesktopInformation.Toolx.DeviceInfo;
 
 namespace DesktopInformation.DesktopObj
 {
@@ -23,10 +24,9 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinTextObj : WinObjBase
     {
-        Settings set;
-        public WinTextObj(Settings set) : base(set)
+        public WinTextObj(Binding.ObjListBinding item, Settings set, Toolx.DeviceInfo deviceInfo) : base(item,set,deviceInfo)
         {
-            this.set = set;
+            
             InitializeComponent();
 
 
@@ -41,8 +41,9 @@ namespace DesktopInformation.DesktopObj
 
         }
         public Dictionary<string, DateTime> timer = new Dictionary<string, DateTime>();
-        public override void Load(string text)
+        public override void Load()
         {
+            string text = item.Value;
             this.text = "";
             Regex rDate = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2})\}");
             Regex rDateTime = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2}),(?<Hour>\d{1,2}),(?<Minute>\d{1,2}),(?<Second>\d{1,2})\}");
@@ -62,14 +63,15 @@ namespace DesktopInformation.DesktopObj
                     {
                         timer.Add(match.Groups["Name"].Value, new DateTime(int.Parse(match.Groups["Year"].Value), int.Parse(match.Groups["Month"].Value), int.Parse(match.Groups["Day"].Value)));
                     }
-                    catch (ArgumentOutOfRangeException ex)
+                    catch (ArgumentOutOfRangeException)
                     {
                         ShowAlert("“" + match.Groups["Name"].Value + "”的日期不合法！");
+                        return;
                     }
                 }
                 else if (rDateTime.IsMatch(i))
                 {
-                    Match match = rDate.Match(i);
+                    Match match = rDateTime.Match(i);
                     if (timer.ContainsKey(match.Groups["Name"].Value))
                     {
                         ShowAlert("存在相同的计时名：" + match.Groups["Name"].Value + "！请立即更改。");
@@ -85,17 +87,17 @@ namespace DesktopInformation.DesktopObj
                                   int.Parse(match.Groups["Second"].Value)
                             ));
                     }
-                    catch (ArgumentOutOfRangeException ex)
+                    catch (ArgumentOutOfRangeException )
                     {
                         ShowAlert("“" + match.Groups["Name"].Value + "”的日期不合法！");
+                        return;
                     }
                 }
-
-
                 else
                 {
                     this.text += i + Environment.NewLine;
                 }
+                this.text=this.text.TrimEnd(Environment.NewLine.ToArray());
             }
             // this.text= this.text.Remove(text.Length - 2);
             Analysis();
@@ -109,25 +111,32 @@ namespace DesktopInformation.DesktopObj
         /// 支持的时间差型正则子串
         /// </summary>
         string supportTimeSpan = "Days|Hours|Minutes|Seconds|Milliseconds|TotalDays|TotalHours|TotalMinutes|TotalSeconds|TotalMilliseconds";
-        /// <summary>
-        /// 支持的系统信息正则子串
-        /// </summary>
-        string supportInfo = "TotalMemory|MemoryUsage|FreeMemory|UsedMemory|ProcessCount|CpuUsage|" +
-            "DownloadSpeedKB|DownloadSpeedMB|UploadSpeedKB|UploadSpeedMB|" +
-            "BatteryVoltage|BatteryRate";
+
         /// <summary>
         /// 更新界面
         /// </summary>
         public override void Update()
         {
-            base.Update();
             StringBuilder temp = new StringBuilder(text);
 
             foreach (var i in matchedString)
             {
                 temp = temp.Replace(i, ConvertToValue(i));
             }
-            txt.Text = temp.ToString();
+            UpdateText(temp.ToString());
+        }
+        public void UpdateText(string text)
+        {
+            if(set.Animation)
+            {
+                txtAni.ChangeText(text);
+                txt.Text = "";
+            }
+            else
+            {
+                txtAni.Text = "";
+                txt.Text = text.ToString();
+            }
         }
         /// <summary>
         /// 普通类型正则表达式
@@ -225,21 +234,21 @@ namespace DesktopInformation.DesktopObj
         /// 获取指定格式计时类型的值
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="text"></param>
+        /// <param name="type"></param>
         /// <param name="length"></param>
         /// <param name="dec"></param>
         /// <returns></returns>
-        private string GetValue(string name, string text, int length, int dec)
+        private string GetValue(string name, string type, int length, int dec)
         {
             if (!timer.ContainsKey(name))
             {
-                return "??" + text;
+                return "??" + type;
             }
 
             DateTime target = timer[name];
             TimeSpan span = target - DateTime.Now;
             double result = double.NaN;
-            switch (text)
+            switch (type)
             {
                 case "Days":
                     result = span.Days;
@@ -274,7 +283,7 @@ namespace DesktopInformation.DesktopObj
             }
             if (double.IsNaN(result))
             {
-                return "??" + text;
+                return "??" + type;
             }
             return ToSpecifiedLengthAndDec(result, length, dec);
 
@@ -282,24 +291,24 @@ namespace DesktopInformation.DesktopObj
         /// <summary>
         /// 获取值
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        private string GetValue(string text)
+        private string GetValue(string type)
         {
-            return GetValue(text, 0, 0);
+            return GetValue(type, 0, 0);
         }
         /// <summary>
         /// 获取指定格式的值
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="type"></param>
         /// <param name="length"></param>
         /// <param name="dec"></param>
         /// <returns></returns>
-        private string GetValue(string text, int length, int dec)
+        private string GetValue(string type, int length, int dec)
         {
-            double result =double.NaN
+            double result = double.NaN;
             DateTime now = DateTime.Now;
-            switch (text)
+            switch (type)
             {
                 case "Year":
                     result = now.Year;
@@ -329,6 +338,9 @@ namespace DesktopInformation.DesktopObj
                 case "UsedMemory":
                     result = DeviceInfo.UsedMemory;
                     break;
+                case "MemoryUsage":
+                    result = DeviceInfo.MemoryUsage;
+                    break;
                 case "ProcessCount":
                     result = DeviceInfo.ProcessCount;
                     break;
@@ -349,36 +361,106 @@ namespace DesktopInformation.DesktopObj
                     result = DeviceInfo.UploadSpeedMB;
                     break;
 
-
+                case "Battery1Voltage":
+                    result = DeviceInfo.Battery1Voltage;
+                    break;
+                case "Battery2Voltage":
+                    result = DeviceInfo.Battery2Voltage;
+                    break;
+                case "Battery1Rate":
+                    result = DeviceInfo.Battery1Rate;
+                    break;
+                case "Battery2Rate":
+                    result = DeviceInfo.Battery2Rate;
+                    break;
+                case "BatteryPercent":
+                    result = DeviceInfo.BatteryPercent;
+                    break;
+                case "BatteryRemainHours":
+                    if(DeviceInfo.BatteryRemain.HasValue)
+                    {
+                        if(DeviceInfo.BatteryRemain.Value==TimeSpan.Zero)
+                        {
+                            return "正在充电";
+                        }
+                        result = DeviceInfo.BatteryRemain.Value.Hours;
+                    }
+                    else
+                    {
+                        return "未知";
+                    }
+                    break;
+                case "BatteryRemainMinutes":
+                    if (DeviceInfo.BatteryRemain.HasValue)
+                    {
+                        if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
+                        {
+                            return "正在充电";
+                        }
+                        result = DeviceInfo.BatteryRemain.Value.Minutes;
+                    }
+                    else
+                    {
+                        return "未知";
+                    }
+                    break;
+                case "BatteryRemainTotalHours":
+                    if (DeviceInfo.BatteryRemain.HasValue)
+                    {
+                        if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
+                        {
+                            return "正在充电";
+                        }
+                        result = DeviceInfo.BatteryRemain.Value.TotalHours;
+                    }
+                    else
+                    {
+                        return "未知";
+                    }
+                    break;
+                case "BatteryRemainTotalMinutes":
+                    if (DeviceInfo.BatteryRemain.HasValue)
+                    {
+                        if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
+                        {
+                            return "正在充电";
+                        }
+                        result = DeviceInfo.BatteryRemain.Value.TotalMinutes;
+                    }
+                    else
+                    {
+                        return "未知";
+                    }
+                    break;
             }
 
             if (!double.IsNaN(result))
             {
                 return ToSpecifiedLengthAndDec(result, length, dec);
             }
-            string resultStr;
-            List<double> infos;
-            switch (text)
-            {
-                case "BatteryVoltage":
-                    infos = DeviceInfo.BatteryVoltage;
-                    resultStr = ToSpecifiedLengthAndDec(infos[0], length, dec);
-                    for (int i = 1; i < infos.Count; i++)
-                    {
-                        resultStr += set.Spliter + ToSpecifiedLengthAndDec(infos[i], length, dec);
-                    }
-                    return resultStr;
-                case "BatteryRate":
-                    infos = DeviceInfo.BatteryRate;
-                    resultStr = ToSpecifiedLengthAndDec(infos[0], length, dec);
-                    for (int i = 1; i < infos.Count; i++)
-                    {
-                        resultStr += set.Spliter + ToSpecifiedLengthAndDec(infos[i], length, dec);
-                    }
-                    return resultStr;
+            //string resultStr;
+            //List<double> infos;
+            //switch (type)
+            //{
+            //    case "BatteryVoltage":
+            //        infos = DeviceInfo.BatteryVoltage;
+            //        resultStr = ToSpecifiedLengthAndDec(infos[0], length, dec);
+            //        for (int i = 1; i < infos.Count; i++)
+            //        {
+            //            resultStr += set.Spliter + ToSpecifiedLengthAndDec(infos[i], length, dec);
+            //        }
+            //        return resultStr;
+            //    case "BatteryRate":
+            //        infos = DeviceInfo.BatteryRate;
+            //        resultStr = ToSpecifiedLengthAndDec(infos[0], length, dec);
+            //        for (int i = 1; i < infos.Count; i++)
+            //        {
+            //            resultStr += set.Spliter + ToSpecifiedLengthAndDec(infos[i], length, dec);
+            //        }
+            //        return resultStr;
 
-            }
-            return "??" + text;
+            //}
+            return "??" + type;
         }
         /// <summary>
         /// 到指定精度和长度
@@ -413,7 +495,7 @@ namespace DesktopInformation.DesktopObj
         /// <summary>
         /// 设备信息
         /// </summary>
-        public override Tool.DeviceInfo DeviceInfo { get; set; }
+        public override Toolx.DeviceInfo DeviceInfo { get; set; }
 
     }
 }

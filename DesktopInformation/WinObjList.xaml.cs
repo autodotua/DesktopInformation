@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DesktopInformation.Binding;
 using DesktopInformation.DesktopObj;
+using static DesktopInformation.Toolx.Tools;
 
 namespace DesktopInformation
 {
@@ -43,13 +44,21 @@ namespace DesktopInformation
 
             MenuItem menuText = new MenuItem() { Header = "文本" };
             menuText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Text);
+            MenuItem menuPlainText = new MenuItem() { Header = "纯文本" };
+            menuPlainText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.PlainText);
+            MenuItem menuBar = new MenuItem() { Header = "直条" };
+            menuBar.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Bar);
+            MenuItem menuPie = new MenuItem() { Header = "饼图" };
+            menuPie.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Pie);
             ContextMenu menu = new ContextMenu()
             {
                 IsOpen = true,
                 PlacementTarget = sender as UIElement,
                 Items =
                 {
-                    menuText
+                    menuText,
+                   menuPlainText,
+                   menuBar
                 }
             };
         }
@@ -77,12 +86,8 @@ namespace DesktopInformation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LvwPreviewMouseDoubleClickEventHandler(object sender, MouseButtonEventArgs e)
+        private void LvwItemPreviewMouseDoubleClickEventHandler(object sender, MouseButtonEventArgs e)
         {
-            if (lvw.SelectedIndex < 0)
-            {
-                return;
-            }
             BtnEditClickEventHandler(null, null);
         }
         /// <summary>
@@ -102,10 +107,41 @@ namespace DesktopInformation
         private void LvwSelectionChangedEventHandler(object sender, SelectionChangedEventArgs e)
         {
             btnEdit.IsEnabled = btnAdjust.IsEnabled = btnDelete.IsEnabled = (lvw.SelectedIndex >= 0);
-            if ((lvw.SelectedItem as ObjListBinding).statue == Enums.Statue.Stoped)
+            if ((lvw.SelectedItem as ObjListBinding)?.Statue == Enums.Statue.Stoped)
             {
                 btnEdit.IsEnabled = false;
             }
+        }
+        /// <summary>
+        /// 右键列表项事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LvwItemPreviewMouseRightButtonUpEventHandler(object sender, MouseButtonEventArgs e)
+        {
+            MenuItem menuAdjust = new MenuItem() { Header = "调整" };
+            menuAdjust.Click += (p1, p2) => BtnAdjustClickEventHandler(null, null);
+            MenuItem menuEdit = new MenuItem() { Header = "编辑" };
+            menuEdit.Click += (p1, p2) => BtnEditClickEventHandler(null, null);
+            MenuItem menuDelete = new MenuItem() { Header = "删除" };
+            menuEdit.Click += (p1, p2) => BtnDeleteClickEventHandler(null, null);
+            ContextMenu menu = new ContextMenu()
+            {
+                IsOpen = true,
+                PlacementTarget = sender as UIElement,
+                Items =
+                {
+                    menuAdjust,
+                   menuEdit,
+                   menuDelete
+                }
+            };
+        }
+
+        private void BtnDeleteClickEventHandler(object sender, RoutedEventArgs e)
+        {
+            manager.RemoveWindow(lvw.SelectedItem as ObjListBinding);
+            helper.RemoveItem(lvw.SelectedItem as ObjListBinding);
         }
     }
 }

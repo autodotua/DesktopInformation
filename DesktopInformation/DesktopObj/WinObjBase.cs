@@ -1,4 +1,4 @@
-﻿using DesktopInformation.Tool;
+﻿using DesktopInformation.Toolx;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +17,23 @@ namespace DesktopInformation.DesktopObj
 
     public abstract class WinObjBase:Window
     {
-        Properties.Settings set;
-        public WinObjBase(Properties.Settings set):base()
+        protected Properties.Settings set;
+        protected Binding.ObjListBinding item;
+        public WinObjBase(Binding.ObjListBinding item,Properties.Settings set):this()
         {
             this.set = set;
+            this.item = item;
+        }
+
+        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set,DeviceInfo deviceInfo) : this()
+        {
+            this.set = set;
+            this.item = item;
+            DeviceInfo = deviceInfo;
+        }
+
+        public WinObjBase():base()
+        {
             WindowStyle = WindowStyle.None;
             ShowInTaskbar = false;
             AllowsTransparency = true;
@@ -31,17 +44,12 @@ namespace DesktopInformation.DesktopObj
                 CaptionHeight = 0,
                 ResizeBorderThickness = new Thickness(4),
             });
-            PreviewMouseLeftButtonDown+=(p1,p2) => DragMove(); 
+            PreviewMouseLeftButtonDown += (p1, p2) => DragMove();
             Loaded += (p1, p2) =>
-              {
-                  SetToStickOnDesktop();
-                  SetToMouseThrough();
-              };
-
-        }
-
-        protected WinObjBase()
-        {
+            {
+                SetToStickOnDesktop();
+                SetToMouseThrough();
+            };
         }
         #region WinAPI
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -87,12 +95,8 @@ namespace DesktopInformation.DesktopObj
         #endregion
 
 
-        public virtual void Update()
-        {
-            DeviceInfo.Update();
-        }
-        public abstract void Load(string text);
-
+        public abstract void Update();
+        public abstract void Load();
         private bool adjuesting;
         public bool Adjuest
         {

@@ -61,13 +61,13 @@ namespace DesktopInformation.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ignoreAdministration {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Animation {
             get {
-                return ((bool)(this["ignoreAdministration"]));
+                return ((bool)(this["Animation"]));
             }
             set {
-                this["ignoreAdministration"] = value;
+                this["Animation"] = value;
             }
         }
     }

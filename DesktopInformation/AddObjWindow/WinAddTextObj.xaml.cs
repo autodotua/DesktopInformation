@@ -17,18 +17,25 @@ namespace DesktopInformation.AddObjWindow
     /// <summary>
     /// WinAddTextObj.xaml 的交互逻辑
     /// </summary>
-    public partial class WinAddTextObj : AddObjWindowBase
+    public partial class WinAddTextObj : WinAddObjBase
     {
-        public WinAddTextObj()
+        public WinAddTextObj(string hintText)
         {
             InitializeComponent();
+            HintText = hintText;
         }
 
-        public WinAddTextObj(string name,string value)
+        public WinAddTextObj(string name, string value, string hintText) : this(hintText)
         {
-            InitializeComponent();
             txtName.Text = name;
             txtValue.Text = value;
+            HintText = HintText;
+        }
+
+        public string HintText
+        {
+            get => txtValue.HintText;
+            set => txtValue.HintText= value;
         }
         
 
@@ -43,8 +50,9 @@ namespace DesktopInformation.AddObjWindow
             }
             else
             {
-                Tool.Tools.ShowAlert("请填写名称和内容！");
+                Toolx.Tools.ShowAlert("请填写名称和内容！");
             }
         }
+
     }
 }

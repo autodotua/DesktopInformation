@@ -8,39 +8,46 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static System.Windows.Forms.SystemInformation;
 
-namespace DesktopInformation.Tool
+namespace DesktopInformation.Toolx
 {
     public class DeviceInfo
     {
+        /// <summary>
+        /// 支持的系统信息正则子串
+        /// </summary>
+        public static string supportInfo = "TotalMemory|MemoryUsage|FreeMemory|UsedMemory|ProcessCount|CpuUsage|" +
+            "DownloadSpeedKB|DownloadSpeedMB|UploadSpeedKB|UploadSpeedMB|" +
+            "Battery1Voltage|Battery2Voltage|Battery1Rate|Battery2Rate|BatteryPercent|BatteryRemainHours|BatteryRemainMinutes|BatteryRemainTotalHours|BatteryRemainTotalMinutes";
         private NetworkMonitor monitor;
-        NetworkAdapter adapter=null;
+        NetworkAdapter adapter = null;
         Properties.Settings set;
         public DeviceInfo(Properties.Settings set)
         {
             this.set = set;
             monitor = new NetworkMonitor();
-                     var adapters= monitor.Adapters.Where(p => p.Name == set.NetworkAdapter);
-            if(adapters.Count()>0)
+            var adapters = monitor.Adapters.Where(p => p.Name == set.NetworkAdapter);
+            if (adapters.Count() > 0)
             {
-                adapter= adapters.ToArray()[0];
+                adapter = adapters.ToArray()[0];
                 monitor.StartMonitoring();
             }
             cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             cpuCounter.NextValue();
-           // computer.Open();
+            // computer.Open();
             Update();
         }
         PerformanceCounter cpuCounter;
         ManagementObjectSearcher systemInfoSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem");
-        ManagementObjectSearcher batteryInfoSearcher = new ManagementObjectSearcher("root\\WMI","SELECT * FROM BatteryStatus");
+        ManagementObjectSearcher batteryInfoSearcher = new ManagementObjectSearcher("root\\WMI", "SELECT * FROM BatteryStatus");
         ManagementObject systemInfo;
         ManagementObject[] batteryInfo;
         public void Update()
-        { 
+        {
             systemInfo = systemInfoSearcher.Get().Cast<ManagementObject>().ToArray()[0];
-            batteryInfo= batteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
-
+            batteryInfo = batteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
+            cpuUsage = cpuCounter.NextValue();
 
         }
         //[DllImport("kernel32.dll")]
@@ -58,7 +65,7 @@ namespace DesktopInformation.Tool
         /// <summary>
         /// 总内存（GB）
         /// </summary>
-        public double TotalMemory=>double.Parse(systemInfo["TotalVisibleMemorySize"].ToString()) / (1024 * 1024);
+        public double TotalMemory => double.Parse(systemInfo["TotalVisibleMemorySize"].ToString()) / (1024 * 1024);
         /// <summary>
         /// 已用内存（GB）
         /// </summary>
@@ -66,42 +73,38 @@ namespace DesktopInformation.Tool
         /// <summary>
         /// 可用内存（GB)
         /// </summary>
-        public double FreeMemory => double.Parse(systemInfo["FreePhysicalMemory"].ToString())/(1024*1024);
-        public double MemoryUsage => UsedMemory / TotalMemory;
+        public double FreeMemory => double.Parse(systemInfo["FreePhysicalMemory"].ToString()) / (1024 * 1024);
+        /// <summary>
+        /// 内存使用率（%）
+        /// </summary>
+        public double MemoryUsage => UsedMemory / TotalMemory*100;
         /// <summary>
         /// 进程数量
         /// </summary>
-        public double ProcessCount => double.Parse(systemInfo["NumberOfProcesses"].ToString()) ;
+        public double ProcessCount => double.Parse(systemInfo["NumberOfProcesses"].ToString());
         /// <summary>
         /// 电池电压（V）
         /// </summary>
-       public List<double> BatteryVoltage
-        {
-            get
-            {
-                List<double> list = new List<double>();
-                foreach (var i in batteryInfo)
-                {
-                    list.Add(double.Parse(i["Voltage"].ToString())/1000);
-                }
-                return list;
-            }
-        }
+        public double Battery1Voltage => double.Parse(batteryInfo[0]["Voltage"].ToString()) / 1000;
+
+        public double Battery2Voltage => double.Parse(batteryInfo[1]["Voltage"].ToString()) / 1000;
         /// <summary>
         /// 电池功率（W，充电为正）
         /// </summary>
-        public List<double> BatteryRate
+        public double Battery1Rate => double.Parse(batteryInfo[0]["ChargeRate"].ToString()) / 1000;
+        public double Battery2Rate => double.Parse(batteryInfo[1]["ChargeRate"].ToString()) / 1000;
+        public double BatteryPercent => Math.Round(PowerStatus.BatteryLifePercent * 100);
+        public TimeSpan? BatteryRemain
         {
             get
             {
-                List<double> list = new List<double>();
-                foreach (var i in batteryInfo)
-                {
-                    list.Add((double.Parse(i["ChargeRate"].ToString())-double.Parse(i["DischargeRate"].ToString()))/1000);
-                }
-                return list;
+                TimeSpan? remain = TimeSpan.FromSeconds(PowerStatus.BatteryLifeRemaining);
+                return PowerStatus.PowerLineStatus == System.Windows.Forms.PowerLineStatus.Online ?
+                     TimeSpan.Zero : (PowerStatus.BatteryLifeRemaining == -1 ? null : remain);
+
             }
         }
+
         //public double CpuTemp
         //{
         //    get
@@ -157,13 +160,13 @@ namespace DesktopInformation.Tool
         /// <summary>
         /// CPU使用率（%）
         /// </summary>
-        public double CpuUsage => cpuCounter.NextValue();
-        public double DownloadSpeedKB => adapter == null ?-1: adapter.DownloadSpeedKbps;
-        public double DownloadSpeedMB => adapter == null ? -1 : adapter.DownloadSpeedKbps/1024;
+        public double CpuUsage => cpuUsage;
+        public double DownloadSpeedKB => adapter == null ? -1 : adapter.DownloadSpeedKbps;
+        public double DownloadSpeedMB => adapter == null ? -1 : adapter.DownloadSpeedKbps / 1024;
         public double UploadSpeedKB => adapter == null ? -1 : adapter.UploadSpeedKbps;
         public double UploadSpeedMB => adapter == null ? -1 : adapter.UploadSpeedKbps / 1024;
 
-
+        private double cpuUsage;
     }
 }
 

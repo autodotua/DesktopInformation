@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Catel.Core, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Catel.Core.5.0.0\lib\net46\Catel.Core.dll</HintPath>
@@ -57,6 +60,7 @@
       <HintPath>..\packages\System.Reactive.Windows.Threading.3.1.1\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -75,13 +79,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="AddObjWindow\WinAddPercentageDataTypeObj.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AddObjWindow\WinAddTextObj.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DesktopObj\WinBarObj.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DesktopObj\WinPlainTextObj.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DesktopObj\WinTextObj.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\RradualChangedTextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\UcHintTextBox.xaml">
       <SubType>Designer</SubType>
@@ -91,15 +111,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddObjWindow\AddObjWindowBase.cs" />
+    <Compile Include="AddObjWindow\WinAddObjBase.cs" />
+    <Compile Include="AddObjWindow\WinAddPercentageDataTypeObj.xaml.cs">
+      <DependentUpon>WinAddPercentageDataTypeObj.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Binding\Enums.cs" />
     <Compile Include="Binding\ObjListBinding.cs" />
+    <Compile Include="DesktopObj\WinBarObj.xaml.cs">
+      <DependentUpon>WinBarObj.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DesktopObj\WinObjBase.cs" />
     <Compile Include="DesktopObj\WinObjManager.cs" />
+    <Compile Include="DesktopObj\WinPercentageDataTypeObjBase.cs" />
+    <Compile Include="DesktopObj\WinPlainTextObj.xaml.cs">
+      <DependentUpon>WinPlainTextObj.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DesktopObj\WinTextObj.xaml.cs">
       <DependentUpon>WinTextObj.xaml</DependentUpon>
     </Compile>
@@ -108,6 +138,9 @@
     <Compile Include="Tool\Tools.cs" />
     <Compile Include="AddObjWindow\WinAddTextObj.xaml.cs">
       <DependentUpon>WinAddTextObj.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\RradualChangedTextBlock.xaml.cs">
+      <DependentUpon>RradualChangedTextBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\UcHintTextBox.xaml.cs">
       <DependentUpon>UcHintTextBox.xaml</DependentUpon>
@@ -135,6 +168,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
@@ -145,7 +179,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="日志.txt" />
+    <Resource Include="NonCodeFile\日志.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

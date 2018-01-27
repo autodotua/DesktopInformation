@@ -1,26 +1,37 @@
-﻿<src:WinAddObjBase x:Class="DesktopInformation.AddObjWindow.WinAddTextObj"
-                        xmlns:src="clr-namespace:DesktopInformation.AddObjWindow"
+﻿<src:WinAddObjBase x:Class="DesktopInformation.AddObjWindow.WinAddPercentageDataTypeObj"
+                xmlns:src="clr-namespace:DesktopInformation.AddObjWindow"
 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopInformation.AddObjWindow"
-                xmlns:uc="clr-namespace:DesktopInformation.UserControls"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-
+                     xmlns:uc="clr-namespace:DesktopInformation.UserControls"
         mc:Ignorable="d"
-        Title="WinAddTextObj" Height="300" Width="300">
-
+        SizeToContent="Height"
+        Title="WinAddPercentageDataTypeObj" Width="300">
     <Grid Margin="4">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="4"/>
-
             <RowDefinition Height="Auto"/>
-
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <uc:UcHintTextBox x:Name="txtValue"  TextWrapping="True" TextVerticalContentAlignment="Top"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+            </Grid.ColumnDefinitions>
+            <uc:UcHintTextBox x:Name="txtMin" HintText="最低值" Grid.Column="0"/>
+            <uc:UcHintTextBox x:Name="txtValue" HintText="当前值" Grid.Column="2"/>
+            <uc:UcHintTextBox x:Name="txtMax" HintText="最大值" Grid.Column="4"/>
+        </Grid>
 
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -38,6 +49,5 @@
             <Button Grid.Column="6" Content="确定" Click="Button_Click"/>
 
         </Grid>
-
     </Grid>
 </src:WinAddObjBase>

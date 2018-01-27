@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using static DesktopInformation.Enums;
-using static DesktopInformation.Tool.Tools;
+using static DesktopInformation.Toolx.Tools;
 using static DesktopInformation.Properties.Resources;
 using static System.Environment;
 using System.Windows;
@@ -24,19 +24,18 @@ namespace DesktopInformation.Binding
         }
         public ObjListBinding(InfoType type, string name, string value, Statue statue)
         {
-            this.type = type;
+            Type = type;
             Name = name;
             Value = value;
-            this.statue = statue;
+            this.Statue = statue;
         }
-        public InfoType type;
-        public Statue statue;
-        public string Tag;
-        public string Type
+        public InfoType Type { get; set; }
+        public Statue Statue { get; set; }
+        public string ShownType
         {
             get
             {
-                switch (type)
+                switch (Type)
                 {
                     case InfoType.Bar:
                         return "直条";
@@ -52,22 +51,25 @@ namespace DesktopInformation.Binding
         }
         public string Name { get; set; }
         public string Value { get; set; }
-        public string Statue
+        public string ShownStatue
         {
             get
             {
-                switch (statue)
+                switch (Statue)
                 {
-                    case Enums.Statue.Pausing:
+                    case Statue.Pausing:
                         return "暂停中";
-                    case Enums.Statue.Running:
+                    case Statue.Running:
                         return "运行中";
-                    case Enums.Statue.Stoped:
+                    case Statue.Stoped:
                         return "已停止";
                 }
                 return null;
             }
         }
+
+
+        public string ForegroundColor{get;set;}
 
     }
 
@@ -104,42 +106,68 @@ namespace DesktopInformation.Binding
             manager.Load(listBinding.ToArray());
         }
 
-        public ObjListBinding AddTextObject(string name, string value)
+        public ObjListBinding AddItem(InfoType type, string name, string value)
         {
-            ObjListBinding newBinding = new ObjListBinding(InfoType.Text, name, value, Statue.Running);
-            newBinding.Tag = DateTime.Now.ToString();
+            ObjListBinding newBinding = new ObjListBinding(type, name, value, Statue.Running);
             listBinding.Add(newBinding);
             return newBinding;
         }
+        
+
 
         public void OpenEditWindow(InfoType type)
         {
-            dynamic win = null;
+            WinAddObjBase win = null;
             ObjListBinding item = null;
             switch (type)
             {
                 case InfoType.Text:
-                    win = new AddObjWindow.WinAddTextObj();
+                    win = new WinAddTextObj("请输入含通配符的内容");
                     win.ShowDialog();
                     if (win?.DialogResult == true)
                     {
-                        item=AddTextObject(win.ObjName, win.ObjValue);
+                        item=AddItem(type,win.ObjName, win.ObjValue);
+                    }
+                    break;
+                case InfoType.PlainText:
+                    win = new WinAddTextObj("请输入内容");
+                    win.ShowDialog();
+                    if (win?.DialogResult == true)
+                    {
+                        item = AddItem(type, win.ObjName, win.ObjValue);
+                    }
+                    break;
+                case InfoType.Bar:
+                    win = new WinAddPercentageDataTypeObj();
+                    win.ShowDialog();
+                    if (win?.DialogResult == true)
+                    {
+                        item = AddItem(type, win.ObjName, win.ObjValue);
                     }
                     break;
             }
             if (win?.DialogResult == true)
             {
-                manager.Add(item);
+                manager.AddWindow(item);
             }
         }
 
         public void OpenEditWindow(ObjListBinding item)
         {
-           AddObjWindowBase  win = null;
-            switch (item.type)
+            WinAddTextObj win = null;
+            switch (item.Type)
             {
                 case InfoType.Text:
-                    win = new WinAddTextObj(item.Name,item.Value);
+                    win = new WinAddTextObj(item.Name,item.Value, "请输入含通配符的内容");
+                    win.ShowDialog();
+                    if (win?.DialogResult == true)
+                    {
+                        item.Name = win.ObjName;
+                        item.Value = win.ObjValue;
+                    }
+                    break;
+                case InfoType.PlainText:
+                    win = new WinAddTextObj(item.Name, item.Value, "请输入内容");
                     win.ShowDialog();
                     if (win?.DialogResult == true)
                     {
@@ -154,7 +182,10 @@ namespace DesktopInformation.Binding
             }
         }
 
-
+        public void RemoveItem(ObjListBinding item)
+        {
+            listBinding.Remove(item);
+        }
 
         public void Dispose()
         {

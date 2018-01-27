@@ -1,0 +1,14 @@
+﻿<src:WinPercentageDataTypeObjBase x:Class="DesktopInformation.DesktopObj.WinBarObj"
+                xmlns:src="clr-namespace:DesktopInformation.DesktopObj"
+
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopInformation.DesktopObj"
+        mc:Ignorable="d"
+        Title="WinBarObj" Height="50" Width="300">
+
+        <ProgressBar x:Name="bar" Maximum="1"  HorizontalAlignment="Stretch" />
+
+</src:WinPercentageDataTypeObjBase>
