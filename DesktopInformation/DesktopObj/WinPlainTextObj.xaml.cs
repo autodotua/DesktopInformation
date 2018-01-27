@@ -20,8 +20,10 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinPlainTextObj : WinObjBase
     {
-        public WinPlainTextObj() : base()
+        Binding.ObjListBinding item;
+        public WinPlainTextObj(Binding.ObjListBinding item, Properties.Settings set) : base(item,set)
         {
+            this.item = item;
             InitializeComponent();
         }
 
@@ -29,11 +31,20 @@ namespace DesktopInformation.DesktopObj
 
         public override void Load()
         {
-            txt.Text = item.Value;
+            tbk.Text = item.Value;
         }
         public override void Update()
         {
 
+        }
+        public override void ChangeBackgroundColor()
+        {
+            tbk.Background = ToBrush(item.BackgounrdColor);
+        }
+
+        public override void ChangeForegroundColor()
+        {
+            tbk.Foreground = ToBrush(item.ForegroundColor);
         }
     }
 }

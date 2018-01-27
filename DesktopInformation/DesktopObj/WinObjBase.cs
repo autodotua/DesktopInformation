@@ -19,21 +19,11 @@ namespace DesktopInformation.DesktopObj
     {
         protected Properties.Settings set;
         protected Binding.ObjListBinding item;
-        public WinObjBase(Binding.ObjListBinding item,Properties.Settings set):this()
+        public WinObjBase(Binding.ObjListBinding item,Properties.Settings set):base()
         {
             this.set = set;
             this.item = item;
-        }
 
-        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set,DeviceInfo deviceInfo) : this()
-        {
-            this.set = set;
-            this.item = item;
-            DeviceInfo = deviceInfo;
-        }
-
-        public WinObjBase():base()
-        {
             WindowStyle = WindowStyle.None;
             ShowInTaskbar = false;
             AllowsTransparency = true;
@@ -50,7 +40,21 @@ namespace DesktopInformation.DesktopObj
                 SetToStickOnDesktop();
                 SetToMouseThrough();
             };
+
+            item.ForegroundColorChanged += () => ChangeForegroundColor();
+            item.BackgroundColorChanged += () => ChangeBackgroundColor();
+
         }
+
+        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set,DeviceInfo deviceInfo) : this(item,set)
+        {
+            this.set = set;
+            this.item = item;
+            DeviceInfo = deviceInfo;
+        }
+
+
+
         #region WinAPI
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPTStr)] string lpClassName, [MarshalAs(UnmanagedType.LPTStr)] string lpWindowName);
@@ -94,6 +98,8 @@ namespace DesktopInformation.DesktopObj
         }
         #endregion
 
+        public virtual void ChangeForegroundColor() { }
+        public virtual void ChangeBackgroundColor() { }
 
         public abstract void Update();
         public abstract void Load();
@@ -119,5 +125,10 @@ namespace DesktopInformation.DesktopObj
             get => adjuesting;
         }
        public abstract DeviceInfo DeviceInfo { get; set; }
+
+        protected Brush ToBrush(string color)
+        {
+            return new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+        }
     }
 }

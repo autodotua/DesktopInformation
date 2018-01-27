@@ -9,7 +9,7 @@
         Title="WinPlainTextObj" Height="300" Width="300">
     <Grid>
         <Viewbox>
-            <TextBox x:Name="txt" Background="Transparent" BorderThickness="0" Foreground="White"/>
+            <TextBlock x:Name="tbk" Background="Transparent"  Foreground="White"/>
         </Viewbox>
     </Grid>
 </src:WinObjBase>

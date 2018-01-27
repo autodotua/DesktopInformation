@@ -22,7 +22,7 @@ namespace DesktopInformation.Binding
         public ObjListBinding()
         {
         }
-        public ObjListBinding(InfoType type, string name, string value, Statue statue)
+        public ObjListBinding(InfoType type, string name, string value, Statue statue):this()
         {
             Type = type;
             Name = name;
@@ -69,8 +69,31 @@ namespace DesktopInformation.Binding
         }
 
 
-        public string ForegroundColor{get;set;}
 
+        private string foregroundColor;
+        public string ForegroundColor
+        {
+            get => foregroundColor;
+            set
+            {
+                foregroundColor = value;
+                ForegroundColorChanged();
+            }
+        }
+        private string backgroundColor;
+        public string BackgounrdColor
+        {
+            get => backgroundColor;
+            set
+            {
+                backgroundColor = value;
+                BackgroundColorChanged();
+            }
+        }
+        public event ObjEventHandler BackgroundColorChanged;
+
+        public event ObjEventHandler ForegroundColorChanged;
+        public delegate void ObjEventHandler();   
     }
 
 

@@ -125,17 +125,21 @@ namespace DesktopInformation.DesktopObj
             }
             UpdateText(temp.ToString());
         }
+        /// <summary>
+        /// 更新文字
+        /// </summary>
+        /// <param name="text"></param>
         public void UpdateText(string text)
         {
             if(set.Animation)
             {
-                txtAni.ChangeText(text);
-                txt.Text = "";
+                tbkAni.ChangeText(text);
+                tbk.Text = "";
             }
             else
             {
-                txtAni.Text = "";
-                txt.Text = text.ToString();
+                tbkAni.Text = "";
+                tbk.Text = text.ToString();
             }
         }
         /// <summary>
@@ -492,6 +496,19 @@ namespace DesktopInformation.DesktopObj
         {
             return new string('0', length);
         }
+
+        public override void ChangeBackgroundColor()
+        {
+            tbk.Background = ToBrush(item.BackgounrdColor);
+        }
+
+        public override void ChangeForegroundColor()
+        {
+            tbk.Foreground=tbkAni.Foreground = ToBrush(item.ForegroundColor);
+        }
+
+
+
         /// <summary>
         /// 设备信息
         /// </summary>

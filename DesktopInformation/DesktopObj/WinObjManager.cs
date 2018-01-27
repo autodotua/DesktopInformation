@@ -72,7 +72,7 @@ namespace DesktopInformation.DesktopObj
                     win.Show();
                     break;
                 case PlainText:
-                    win = new WinPlainTextObj();
+                    win = new WinPlainTextObj(item,set);
                     win.Load();
                     wins.Add(win, item);
                     win.Show();

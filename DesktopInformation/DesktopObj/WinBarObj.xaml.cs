@@ -38,5 +38,15 @@ namespace DesktopInformation.DesktopObj
                 bar.Value = value / (max - min);
             }
         }
+
+        public override void ChangeBackgroundColor()
+        {
+            bar.Background =ToBrush(item.BackgounrdColor);
+        }
+
+        public override void ChangeForegroundColor()
+        {
+            bar.Foreground = ToBrush(item.ForegroundColor);
+        }
     }
 }

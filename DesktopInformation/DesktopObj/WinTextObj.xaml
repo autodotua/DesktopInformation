@@ -10,8 +10,8 @@
 
         <Viewbox>
         <Grid>
-            <TextBox x:Name="txt" Background="Transparent" BorderThickness="0" Foreground="White"/>
-            <uc:RradualChangedTextBlock x:Name="txtAni" Background="Transparent" BorderThickness="0" Foreground="White"/>
+            <TextBlock x:Name="tbk" Background="Transparent"  Foreground="White"/>
+            <uc:RradualChangedTextBlock x:Name="tbkAni" Background="Transparent" BorderThickness="0" Foreground="White"/>
         </Grid>
     </Viewbox>
 
