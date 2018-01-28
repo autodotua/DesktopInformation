@@ -1,4 +1,4 @@
-﻿using DesktopInformation.Toolx;
+﻿using DesktopInformation.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +24,11 @@ namespace DesktopInformation.DesktopObj
             this.set = set;
             this.item = item;
 
+            Width = item.Width;
+            Height = item.Height;
+            Left = item.Left;
+            Top = item.Top;
+
             WindowStyle = WindowStyle.None;
             ShowInTaskbar = false;
             AllowsTransparency = true;
@@ -40,9 +45,7 @@ namespace DesktopInformation.DesktopObj
                 SetToStickOnDesktop();
                 SetToMouseThrough();
             };
-
-            item.ForegroundColorChanged += () => ChangeForegroundColor();
-            item.BackgroundColorChanged += () => ChangeBackgroundColor();
+            
 
         }
 
@@ -97,12 +100,10 @@ namespace DesktopInformation.DesktopObj
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
         }
         #endregion
-
-        public virtual void ChangeForegroundColor() { }
-        public virtual void ChangeBackgroundColor() { }
-
+        
         public abstract void Update();
         public abstract void Load();
+        public abstract void UpdateDisplay();
         private bool adjuesting;
         public bool Adjuest
         {
@@ -110,7 +111,7 @@ namespace DesktopInformation.DesktopObj
             {
                 adjuesting = value;
                 Background = new SolidColorBrush(value ? Colors.Gray : Colors.Transparent);
-                BorderThickness = new Thickness((value ? 4 : 0));
+                BorderThickness = new Thickness((value ? 4 : item.BorderThickness));
                 ResizeMode = value ? ResizeMode.CanResize : ResizeMode.NoResize;
                 IsHitTestVisible = value;
                 if (value)
@@ -120,6 +121,10 @@ namespace DesktopInformation.DesktopObj
                 else
                 {
                     SetToMouseThrough();
+                    item.Left = Left;
+                    item.Top = Top;
+                    item.Width = Width;
+                    item.Height = Height;
                 }
             }
             get => adjuesting;

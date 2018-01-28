@@ -19,34 +19,33 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinBarObj : WinPercentageDataTypeObjBase
     {
-        public WinBarObj(Binding.ObjListBinding item, Properties.Settings set, Toolx.DeviceInfo deviceInfo) :base(item,set,deviceInfo)
+        public WinBarObj(Binding.ObjListBinding item, Properties.Settings set, Tools.DeviceInfo deviceInfo) :base(item,set,deviceInfo)
         {
-            this.set = set;
             InitializeComponent();
+            UpdateDisplay();
         }
-       
+
+        public override void UpdateDisplay()
+        {
+            bar.Foreground = ToBrush(item.ForegroundColor);
+            bar.Background = ToBrush(item.BackgounrdColor);
+            bar.BorderBrush = ToBrush(item.BorderColor);
+            bar.BorderThickness = new Thickness(item.BorderThickness);
+        }
+
         public override void Update()
         {
             base.Update();
             
             if (set.Animation)
             {
-                Toolx.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5);
+                Tools.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5);
             }
             else
             {
                 bar.Value = value / (max - min);
             }
         }
-
-        public override void ChangeBackgroundColor()
-        {
-            bar.Background =ToBrush(item.BackgounrdColor);
-        }
-
-        public override void ChangeForegroundColor()
-        {
-            bar.Foreground = ToBrush(item.ForegroundColor);
-        }
+        
     }
 }

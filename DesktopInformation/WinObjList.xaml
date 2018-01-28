@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DesktopInformation"
         mc:Ignorable="d"
         Closing="WindowClosingEventHandler"
+         WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="350" Width="525">
     <Window.Resources>
         <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">

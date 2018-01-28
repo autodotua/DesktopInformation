@@ -1,5 +1,5 @@
 ﻿using DesktopInformation.Binding;
-using DesktopInformation.Toolx;
+using DesktopInformation.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:DesktopInformation"
              StartupUri="WinObjList.xaml">
     <Application.Resources>
+        
         <DrawingBrush x:Key="backgroundBrushColor"  >White</DrawingBrush>
         <DrawingBrush x:Key="darker1BrushColor"  >#FFEEEEEE</DrawingBrush>
         <DrawingBrush x:Key="darker2BrushColor"  >#FFCCCCCC</DrawingBrush>
@@ -19,6 +20,11 @@
         <Color x:Key="backgroundTransparentColor">Transparent</Color>
 
 
+
+  
+        
+        
+        
         <Style TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>

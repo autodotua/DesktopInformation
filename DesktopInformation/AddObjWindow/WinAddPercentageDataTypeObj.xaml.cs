@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,9 +20,22 @@ namespace DesktopInformation.AddObjWindow
     /// </summary>
     public partial class WinAddPercentageDataTypeObj : WinAddObjBase
     {
-        public WinAddPercentageDataTypeObj()
+        public WinAddPercentageDataTypeObj(Binding.ObjListBinding item):base(item)
         {
             InitializeComponent();
+            txtName.Text = item.Name;
+
+            string[] temp = item.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            if(temp.Length==3)
+            {
+                txtMin.Text = temp[0];
+                txtValue.Text = temp[1];
+                txtMax.Text = temp[2];
+            }
+            txtBack.Text = item.BackgounrdColor??"#22000000";
+            txtFore.Text = item.ForegroundColor??"#EE00FF00";
+            txtBorderColor.Text = item.BorderColor;
+            txtBorderThickness.Text = item.BorderThickness.ToString();
         }
 
         private string Check()
@@ -29,7 +43,7 @@ namespace DesktopInformation.AddObjWindow
             string min = txtMin.Text;
             string value = txtValue.Text;
             string max = txtMax.Text;
-            string[] supportList = Toolx.DeviceInfo.supportInfo.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] supportList = Tools.DeviceInfo.supportInfo.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
             if ((!double.TryParse(min, out double dMin)) && (!supportList.Contains(min)))
             {
                 return "格式有误！";
@@ -46,6 +60,14 @@ namespace DesktopInformation.AddObjWindow
             {
                 return "最小值应小于最大值!";
             }
+            if (!(IsColor(txtBack.Text) && IsColor(txtFore.Text) && IsColor(txtBorderColor.Text)))
+            {
+                return "输入的颜色值有误!";
+            }
+            if (!(double.TryParse(txtBorderThickness.Text, out double thickness) && thickness >= 0 & thickness <=10))
+            {
+                return "输入的边框粗细应≥0且≤10!";
+            }
             return null;
         }
 
@@ -54,14 +76,18 @@ namespace DesktopInformation.AddObjWindow
             string check = Check();
             if(check==null)
             {
-                ObjName = txtName.Text;
-                ObjValue = txtMin.Text + "|" + txtValue.Text + "|" + txtMax.Text;
+                item.Name = txtName.Text;
+                item.Value = txtMin.Text + "|" + txtValue.Text + "|" + txtMax.Text;
+                item.BackgounrdColor = txtBack.Text;
+                item.ForegroundColor = txtFore.Text;
+                item.BorderColor = txtBorderColor.Text;
+                item.BorderThickness = double.Parse(txtBorderThickness.Text);
                 DialogResult = true;
                 Close();
             }
             else
             {
-                Toolx.Tools.ShowAlert(check);
+                Tools.Tools.ShowAlert(check);
             }
         }
     }

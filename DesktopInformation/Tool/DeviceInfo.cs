@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using static System.Windows.Forms.SystemInformation;
 
-namespace DesktopInformation.Toolx
+namespace DesktopInformation.Tools
 {
     public class DeviceInfo
     {

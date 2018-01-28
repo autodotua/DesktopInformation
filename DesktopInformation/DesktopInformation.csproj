@@ -40,6 +40,9 @@
     <Reference Include="Catel.Core, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Catel.Core.5.0.0\lib\net46\Catel.Core.dll</HintPath>
     </Reference>
+    <Reference Include="CustomWPFColorPicker">
+      <HintPath>..\..\EasyMuisc\EasyMuisc\bin\Debug\CustomWPFColorPicker.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -122,6 +125,7 @@
     </Compile>
     <Compile Include="Binding\Enums.cs" />
     <Compile Include="Binding\ObjListBinding.cs" />
+    <Compile Include="Binding\ObjListBindingHelper.cs" />
     <Compile Include="DesktopObj\WinBarObj.xaml.cs">
       <DependentUpon>WinBarObj.xaml</DependentUpon>
     </Compile>

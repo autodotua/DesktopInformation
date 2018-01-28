@@ -6,7 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopInformation.DesktopObj"
                 xmlns:uc="clr-namespace:DesktopInformation.UserControls"
-        mc:Ignorable="d" Height="300" Width="300">
+       
+                mc:Ignorable="d" Height="300" Width="300">
 
         <Viewbox>
         <Grid>

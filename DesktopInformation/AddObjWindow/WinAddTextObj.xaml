@@ -8,21 +8,62 @@
         xmlns:local="clr-namespace:DesktopInformation.AddObjWindow"
                 xmlns:uc="clr-namespace:DesktopInformation.UserControls"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-
+xmlns:color="clr-namespace:CustomWPFColorPicker;assembly=CustomWPFColorPicker"
         mc:Ignorable="d"
+                    WindowStartupLocation="CenterScreen"
         Title="WinAddTextObj" Height="300" Width="300">
+    <local:WinAddObjBase.Resources>
+        <Style x:Key="txtColorStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </local:WinAddObjBase.Resources>
 
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="4"/>
-
             <RowDefinition Height="Auto"/>
-
+            <RowDefinition Height="4"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <uc:UcHintTextBox x:Name="txtValue"  TextWrapping="True" TextVerticalContentAlignment="Top"/>
 
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="72"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="背景颜色：" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtBack"  Grid.Column="2" VerticalAlignment="Center"  BorderBrush="{Binding Text, ElementName=txtBack, Mode=OneWay}" Text="#00FFFFFF" Style="{DynamicResource txtColorStyle}"/>
+            <TextBlock Text="前景颜色：" Grid.Row="2" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtFore" Grid.Row="2"  Grid.Column="2" VerticalAlignment="Center"  BorderBrush="{Binding Text, ElementName=txtFore, Mode=OneWay}" Text="#FF000000" Style="{DynamicResource txtColorStyle}"/>
+            <TextBlock Text="边框粗细：" Grid.Row="4" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtBorderThickness" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center"   Text="0" Style="{DynamicResource txtColorStyle}"/>
+            <TextBlock Text="边框颜色：" Grid.Row="6" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtBorderColor" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"   Text="#FFFFFFFF" BorderBrush="{Binding Text, ElementName=txtBorderColor, Mode=OneWay}"   Style="{DynamicResource txtColorStyle}"/>
+
+        </Grid>
+
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="8"/>
@@ -35,7 +76,7 @@
             <uc:UcHintTextBox x:Name="txtName" HintText="请输入名称"/>
             <Button Grid.Column="2" Content="帮助"/>
             <Button Grid.Column="4" Content="添加"/>
-            <Button Grid.Column="6" Content="确定" Click="Button_Click"/>
+            <Button Grid.Column="6" Content="确定" Click="BtnOkClickEventHandler"/>
 
         </Grid>
 

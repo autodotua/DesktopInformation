@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DesktopInformation.Toolx;
+using DesktopInformation.Tools;
 
 namespace DesktopInformation.DesktopObj
 {
-    public class WinPercentageDataTypeObjBase:WinObjBase
+    public abstract class WinPercentageDataTypeObjBase:WinObjBase
     {
         public WinPercentageDataTypeObjBase(Binding.ObjListBinding item, Properties.Settings set, DeviceInfo deviceInfo) : base(item, set,deviceInfo)
         {
@@ -25,9 +25,6 @@ namespace DesktopInformation.DesktopObj
         public override void Load()
         {
             string[] temp = item.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
-
-
-
             if(double.TryParse(temp[0],out min))
             {
                 strMin = null;
@@ -141,6 +138,6 @@ namespace DesktopInformation.DesktopObj
 
         }
 
-
+        public abstract override void UpdateDisplay();
     }
 }

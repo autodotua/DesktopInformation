@@ -14,8 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DesktopInformation.Properties;
-using static DesktopInformation.Toolx.Tools;
-using static DesktopInformation.Toolx.DeviceInfo;
+using static DesktopInformation.Tools.Tools;
+using static DesktopInformation.Tools.DeviceInfo;
 
 namespace DesktopInformation.DesktopObj
 {
@@ -24,7 +24,7 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinTextObj : WinObjBase
     {
-        public WinTextObj(Binding.ObjListBinding item, Settings set, Toolx.DeviceInfo deviceInfo) : base(item,set,deviceInfo)
+        public WinTextObj(Binding.ObjListBinding item, Settings set, Tools.DeviceInfo deviceInfo) : base(item,set,deviceInfo)
         {
             
             InitializeComponent();
@@ -44,6 +44,7 @@ namespace DesktopInformation.DesktopObj
         public override void Load()
         {
             string text = item.Value;
+            UpdateDisplay();
             this.text = "";
             Regex rDate = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2})\}");
             Regex rDateTime = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2}),(?<Hour>\d{1,2}),(?<Minute>\d{1,2}),(?<Second>\d{1,2})\}");
@@ -497,22 +498,19 @@ namespace DesktopInformation.DesktopObj
             return new string('0', length);
         }
 
-        public override void ChangeBackgroundColor()
+        public override void UpdateDisplay()
         {
             tbk.Background = ToBrush(item.BackgounrdColor);
+            tbk.Foreground = tbkAni.Foreground = ToBrush(item.ForegroundColor);
+            BorderBrush = ToBrush(item.BorderColor);
+            BorderThickness = new Thickness(item.BorderThickness);
         }
-
-        public override void ChangeForegroundColor()
-        {
-            tbk.Foreground=tbkAni.Foreground = ToBrush(item.ForegroundColor);
-        }
-
 
 
         /// <summary>
         /// 设备信息
         /// </summary>
-        public override Toolx.DeviceInfo DeviceInfo { get; set; }
+        public override Tools.DeviceInfo DeviceInfo { get; set; }
 
     }
 }

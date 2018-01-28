@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using DesktopInformation.Toolx;
+using DesktopInformation.Tools;
 
 namespace DesktopInformation.DesktopObj
 {
@@ -20,10 +20,10 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinPlainTextObj : WinObjBase
     {
-        Binding.ObjListBinding item;
         public WinPlainTextObj(Binding.ObjListBinding item, Properties.Settings set) : base(item,set)
         {
-            this.item = item;
+            UpdateDisplay();
+
             InitializeComponent();
         }
 
@@ -37,14 +37,12 @@ namespace DesktopInformation.DesktopObj
         {
 
         }
-        public override void ChangeBackgroundColor()
+        public override void UpdateDisplay()
         {
             tbk.Background = ToBrush(item.BackgounrdColor);
-        }
-
-        public override void ChangeForegroundColor()
-        {
             tbk.Foreground = ToBrush(item.ForegroundColor);
+            BorderBrush = ToBrush(item.BorderColor);
+            BorderThickness =new Thickness( item.BorderThickness);
         }
     }
 }
