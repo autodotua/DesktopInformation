@@ -46,29 +46,5 @@ namespace DesktopInformation.Properties {
                 this["NetworkAdapter"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("、")]
-        public string Spliter {
-            get {
-                return ((string)(this["Spliter"]));
-            }
-            set {
-                this["Spliter"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Animation {
-            get {
-                return ((bool)(this["Animation"]));
-            }
-            set {
-                this["Animation"] = value;
-            }
-        }
     }
 }

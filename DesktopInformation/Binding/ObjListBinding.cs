@@ -20,6 +20,8 @@ namespace DesktopInformation.Binding
                 Top = 0;
                 Width = 300;
                 Height = 300;
+                Animation = true;
+                ForcedAbsolute = false;
             }
         }
 
@@ -74,6 +76,9 @@ namespace DesktopInformation.Binding
 
         public double BorderThickness { get; set; }
         public string BorderColor { get; set; }
+        
+        public bool ForcedAbsolute { get; set; } 
+        public bool Animation { get; set; }
     }
     
 }

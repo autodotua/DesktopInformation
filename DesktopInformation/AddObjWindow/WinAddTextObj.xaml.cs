@@ -30,6 +30,8 @@ namespace DesktopInformation.AddObjWindow
             txtFore.Text = item.ForegroundColor??"#FFFFFFFF";
             txtBorderColor.Text = item.BorderColor;
             txtBorderThickness.Text = item.BorderThickness.ToString();
+            chkAbs.IsChecked = item.ForcedAbsolute;
+            chkAnimation.IsChecked = item.Animation;
         }
 
 
@@ -66,6 +68,8 @@ namespace DesktopInformation.AddObjWindow
             item.Value = txtValue.Text;
             item.BackgounrdColor = txtBack.Text;
             item.ForegroundColor = txtFore.Text;
+            item.ForcedAbsolute = chkAbs.IsChecked.Value;
+            item.Animation = chkAnimation.IsChecked.Value;
             DialogResult = true;
             Close();
         }

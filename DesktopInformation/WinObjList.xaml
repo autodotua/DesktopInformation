@@ -90,6 +90,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="btnSettings"  Content="设置"  Click="BtnSettingsClickEventHandler"/>
             <Button x:Name="btnChangeStatues" Grid.Column="2" Content="状态" IsEnabled="False"  Click="BtnChangeStatuesClickEventHandler"/>

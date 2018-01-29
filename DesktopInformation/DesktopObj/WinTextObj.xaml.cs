@@ -49,7 +49,7 @@ namespace DesktopInformation.DesktopObj
             Regex rDate = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2})\}");
             Regex rDateTime = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2}),(?<Hour>\d{1,2}),(?<Minute>\d{1,2}),(?<Second>\d{1,2})\}");
             timer.Clear();
-            foreach (var i in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var i in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
                 
                 if (rDate.IsMatch(i))
@@ -98,8 +98,9 @@ namespace DesktopInformation.DesktopObj
                 {
                     this.text += i + Environment.NewLine;
                 }
-                this.text=this.text.TrimEnd(Environment.NewLine.ToArray());
             }
+            this.text = this.text.TrimEnd(Environment.NewLine.ToArray());
+
             // this.text= this.text.Remove(text.Length - 2);
             Analysis();
         }
@@ -132,7 +133,7 @@ namespace DesktopInformation.DesktopObj
         /// <param name="text"></param>
         public void UpdateText(string text)
         {
-            if(set.Animation)
+            if(item.Animation)
             {
                 tbkAni.ChangeText(text);
                 tbk.Text = "";
@@ -386,13 +387,13 @@ namespace DesktopInformation.DesktopObj
                     {
                         if(DeviceInfo.BatteryRemain.Value==TimeSpan.Zero)
                         {
-                            return "正在充电";
+                            return "∞";
                         }
                         result = DeviceInfo.BatteryRemain.Value.Hours;
                     }
                     else
                     {
-                        return "未知";
+                        return "";
                     }
                     break;
                 case "BatteryRemainMinutes":
@@ -400,13 +401,13 @@ namespace DesktopInformation.DesktopObj
                     {
                         if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
                         {
-                            return "正在充电";
+                            return "∞";
                         }
                         result = DeviceInfo.BatteryRemain.Value.Minutes;
                     }
                     else
                     {
-                        return "未知";
+                        return "";
                     }
                     break;
                 case "BatteryRemainTotalHours":
@@ -414,13 +415,13 @@ namespace DesktopInformation.DesktopObj
                     {
                         if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
                         {
-                            return "正在充电";
+                            return "∞";
                         }
                         result = DeviceInfo.BatteryRemain.Value.TotalHours;
                     }
                     else
                     {
-                        return "未知";
+                        return "";
                     }
                     break;
                 case "BatteryRemainTotalMinutes":
@@ -428,19 +429,23 @@ namespace DesktopInformation.DesktopObj
                     {
                         if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
                         {
-                            return "正在充电";
+                            return "∞";
                         }
                         result = DeviceInfo.BatteryRemain.Value.TotalMinutes;
                     }
                     else
                     {
-                        return "未知";
+                        return "";
                     }
                     break;
             }
 
             if (!double.IsNaN(result))
             {
+                if(item.ForcedAbsolute)
+                {
+                    result = Math.Abs(result);
+                }
                 return ToSpecifiedLengthAndDec(result, length, dec);
             }
             //string resultStr;

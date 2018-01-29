@@ -18,21 +18,30 @@ namespace DesktopInformation.DesktopObj
         {
             foreach (var i in list)
             {
-                AddWindow(i);
+                if (i.Statue != Enums.Statue.Stoped)
+                {
+                    AddWindow(i);
+                }
             }
+            UpdateAll();
             timer.Interval = TimeSpan.FromSeconds(set.UpdateInterval);
             timer.Tick += (p1, p2) =>
             {
                 deviceInfo.Update();
-                foreach (var i in wins)
-                {
-                    if (i.Value.Statue == Enums.Statue.Running && i.Value.Type!= PlainText)
-                    {
-                        i.Key.Update();
-                    }
-                }
+                UpdateAll();
             };
             timer.Start();
+        }
+
+        public void UpdateAll()
+        {
+            foreach (var i in wins)
+            {
+                if (i.Value.Statue == Enums.Statue.Running && i.Value.Type != PlainText)
+                {
+                    i.Key.Update();
+                }
+            }
         }
 
         public void RefreshAll()

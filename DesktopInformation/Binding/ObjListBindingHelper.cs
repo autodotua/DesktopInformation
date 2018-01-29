@@ -12,6 +12,7 @@ using static DesktopInformation.Properties.Resources;
 using static System.Environment;
 using static DesktopInformation.Enums;
 using DesktopInformation.AddObjWindow;
+using System.Windows.Data;
 
 namespace DesktopInformation.Binding
 {
@@ -110,6 +111,7 @@ namespace DesktopInformation.Binding
             if (win?.DialogResult == true)
             {
                 manager.RefreshAll();
+                CollectionViewSource.GetDefaultView(listBinding).Refresh();//刷新列表
             }
         }
 

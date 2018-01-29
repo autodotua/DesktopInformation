@@ -8,11 +8,5 @@
     <Setting Name="NetworkAdapter" Type="System.String" Scope="User">
       <Value Profile="(Default)">Intel[R] Dual Band Wireless-AC 7260</Value>
     </Setting>
-    <Setting Name="Spliter" Type="System.String" Scope="User">
-      <Value Profile="(Default)">、</Value>
-    </Setting>
-    <Setting Name="Animation" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

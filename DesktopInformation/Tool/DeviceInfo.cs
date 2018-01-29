@@ -89,11 +89,20 @@ namespace DesktopInformation.Tools
 
         public double Battery2Voltage => double.Parse(batteryInfo[1]["Voltage"].ToString()) / 1000;
         /// <summary>
-        /// 电池功率（W，充电为正）
+        /// 电池1功率（W，充电为正）
         /// </summary>
-        public double Battery1Rate => double.Parse(batteryInfo[0]["ChargeRate"].ToString()) / 1000;
-        public double Battery2Rate => double.Parse(batteryInfo[1]["ChargeRate"].ToString()) / 1000;
+        public double Battery1Rate => (double.Parse(batteryInfo[0]["ChargeRate"].ToString())- double.Parse(batteryInfo[0]["DischargeRate"].ToString()) )/ 1000;
+        /// <summary>
+        /// 电池2功率（W，充电为正）
+        /// </summary>
+        public double Battery2Rate =>( double.Parse(batteryInfo[1]["ChargeRate"].ToString())- double.Parse(batteryInfo[1]["DischargeRate"].ToString())) / 1000;
+        /// <summary>
+        /// 点亮百分比
+        /// </summary>
         public double BatteryPercent => Math.Round(PowerStatus.BatteryLifePercent * 100);
+        /// <summary>
+        /// 电池剩余时间，0为正在充电，null为未知
+        /// </summary>
         public TimeSpan? BatteryRemain
         {
             get

@@ -37,7 +37,7 @@ namespace DesktopInformation.DesktopObj
         {
             base.Update();
             
-            if (set.Animation)
+            if (item.Animation)
             {
                 Tools.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5);
             }

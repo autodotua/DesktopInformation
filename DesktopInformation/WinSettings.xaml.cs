@@ -29,14 +29,12 @@ namespace DesktopInformation
         {
             this.set = set;
             InitializeComponent();
-            chkAnimation.IsChecked = set.Animation;
             chkStartup.IsChecked = System.IO.File.Exists(path);
             sldUpdate.Value = set.UpdateInterval;
         }
 
         private void BtnSaveClickEventHandler(object sender, RoutedEventArgs e)
         {
-            set.Animation = chkAnimation.IsChecked.Value;
             set.UpdateInterval = (int)sldUpdate.Value;
             if(System.IO.File.Exists(path) && (!chkStartup.IsChecked.Value))
             {

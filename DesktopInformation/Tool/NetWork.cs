@@ -147,7 +147,14 @@ namespace DesktopInformation.Tools
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             foreach (NetworkAdapter adapter in this.monitoredAdapters)
-                adapter.refresh();
+                try
+                {
+                    adapter.refresh();
+                }
+                catch
+                {
+
+                }
         }
         /// <summary>  
         /// Get instances of NetworkAdapter for installed adapters on this computer.  

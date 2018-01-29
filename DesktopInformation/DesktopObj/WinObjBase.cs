@@ -51,8 +51,6 @@ namespace DesktopInformation.DesktopObj
 
         public WinObjBase(Binding.ObjListBinding item, Properties.Settings set,DeviceInfo deviceInfo) : this(item,set)
         {
-            this.set = set;
-            this.item = item;
             DeviceInfo = deviceInfo;
         }
 

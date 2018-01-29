@@ -57,6 +57,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="4"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -71,6 +73,7 @@
             <TextBox x:Name="txtBorderThickness" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center"   Text="0" Style="{DynamicResource txtColorStyle}"/>
             <TextBlock Text="边框颜色：" Grid.Row="6" VerticalAlignment="Center"/>
             <TextBox x:Name="txtBorderColor" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"   Text="#FFFFFFFF" BorderBrush="{Binding Text, ElementName=txtBorderColor, Mode=OneWay}" Style="{DynamicResource txtColorStyle}"/>
+            <CheckBox x:Name="chkAnimation" IsChecked="True" Grid.Row="8" Grid.ColumnSpan="3" Content="刷新动画"/>
 
         </Grid>
         <Grid Grid.Row="4">

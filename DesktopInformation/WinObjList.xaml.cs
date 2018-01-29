@@ -39,7 +39,7 @@ namespace DesktopInformation
 
         private void InitialTray()
         {
-            
+
             notifyIcon = new System.Windows.Forms.NotifyIcon
             {
                 BalloonTipText = "设置界面在任务栏托盘",
@@ -55,7 +55,15 @@ namespace DesktopInformation
             {
                 if (p2.Button == System.Windows.Forms.MouseButtons.Left)
                 {
-                    Visibility = (Visibility == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
+                    if (Visibility == Visibility.Hidden)
+                    {
+                        Visibility = Visibility.Visible;
+                        Activate();
+                    }
+                    else
+                    {
+                        Visibility = Visibility.Hidden;
+                    }
                 }
                 else if (p2.Button == System.Windows.Forms.MouseButtons.Right)
                 {
@@ -67,16 +75,8 @@ namespace DesktopInformation
 
         private void ShowNotifyIconMenu(object sender)
         {
-
-            MenuItem menuText = new MenuItem() { Header = "文本" };
-            menuText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Text);
-            MenuItem menuPlainText = new MenuItem() { Header = "纯文本" };
-            menuPlainText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.PlainText);
-            MenuItem menuShow = new MenuItem() { Header = "显示所有" };
-            menuShow.Click += (p1, p2) =>
-            {
-
-            };
+            MenuItem menuSettings = new MenuItem() { Header = "设置" };
+            menuSettings.Click += (p1, p2) => BtnSettingsClickEventHandler(null, null);
             MenuItem menuExit = new MenuItem() { Header = "退出" };
             menuExit.Click += (p1, p2) =>
             {
@@ -94,7 +94,7 @@ namespace DesktopInformation
                 {
                    // menuText,
                    //menuPlainText,
-                   menuShow,
+                   menuSettings,
                    menuExit
                 }
             };
@@ -151,8 +151,8 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void BtnEditClickEventHandler(object sender, RoutedEventArgs e)
         {
-
             helper.OpenEditWindow(lvw.SelectedItem as ObjListBinding);
+
         }
         /// <summary>
         /// 双击列表项事件
@@ -182,7 +182,7 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void LvwSelectionChangedEventHandler(object sender, SelectionChangedEventArgs e)
         {
-            btnEdit.IsEnabled = btnAdjust.IsEnabled=btnChangeStatues.IsEnabled = btnDelete.IsEnabled = (lvw.SelectedIndex >= 0);
+            btnEdit.IsEnabled = btnAdjust.IsEnabled = btnChangeStatues.IsEnabled = btnDelete.IsEnabled = (lvw.SelectedIndex >= 0);
             if ((lvw.SelectedItem as ObjListBinding)?.Statue == Enums.Statue.Stoped)
             {
                 btnEdit.IsEnabled = false;
@@ -216,8 +216,13 @@ namespace DesktopInformation
 
         private void BtnDeleteClickEventHandler(object sender, RoutedEventArgs e)
         {
-            manager.RemoveWindow(lvw.SelectedItem as ObjListBinding);
-            helper.RemoveItem(lvw.SelectedItem as ObjListBinding);
+            var selectedItems = lvw.SelectedItems.Cast<ObjListBinding>().ToArray();
+            foreach (var i in selectedItems)
+            {
+                manager.RemoveWindow(i);
+                helper.RemoveItem(i);
+            }
+
         }
 
         private void BtnChangeStatuesClickEventHandler(object sender, RoutedEventArgs e)
@@ -229,7 +234,7 @@ namespace DesktopInformation
         {
             WinSettings win = new WinSettings(set);
             win.ShowDialog();
-            if(win.DialogResult.HasValue && win.DialogResult.Value)
+            if (win.DialogResult.HasValue && win.DialogResult.Value)
             {
                 manager.ResetTimerInterval();
             }

@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:DesktopInformation.DesktopObj"
         mc:Ignorable="d"
 
-        Title="WinPlainTextObj" Height="300" Width="300">
+        Title="WinPlainTextObj" >
     <Grid>
         <Viewbox>
             <TextBlock x:Name="tbk" Background="Transparent"  Foreground="White"/>

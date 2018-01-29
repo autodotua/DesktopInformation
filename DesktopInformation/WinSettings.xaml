@@ -22,7 +22,7 @@
             <ColumnDefinition Width="8"/>
             <ColumnDefinition Width="64"/>
         </Grid.ColumnDefinitions>
-        <CheckBox x:Name="chkAnimation" Content="刷新动画"/>
+        <CheckBox x:Name="chkAnimation" Content=""/>
         <CheckBox x:Name="chkStartup" Grid.Row="2" Content="开机启动"/>
         <StackPanel Orientation="Horizontal"   Grid.Row="4">
             <TextBlock Text="刷新间隔：" />

@@ -36,6 +36,7 @@ namespace DesktopInformation.AddObjWindow
             txtFore.Text = item.ForegroundColor??"#EE00FF00";
             txtBorderColor.Text = item.BorderColor;
             txtBorderThickness.Text = item.BorderThickness.ToString();
+            chkAnimation.IsChecked = item.Animation;
         }
 
         private string Check()
@@ -82,6 +83,7 @@ namespace DesktopInformation.AddObjWindow
                 item.ForegroundColor = txtFore.Text;
                 item.BorderColor = txtBorderColor.Text;
                 item.BorderThickness = double.Parse(txtBorderThickness.Text);
+                item.Animation = chkAnimation.IsChecked.Value;
                 DialogResult = true;
                 Close();
             }
