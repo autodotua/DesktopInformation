@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DesktopInformation.UserControls"
 Loaded="UserControl_Loaded"
-             Padding="8"
              mc:Ignorable="d" >
     <Grid x:Name="g">
         <TextBlock x:Name="tbk1">

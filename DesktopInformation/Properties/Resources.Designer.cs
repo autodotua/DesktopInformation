@@ -61,20 +61,21 @@ namespace DesktopInformation.Properties {
         }
         
         /// <summary>
+        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Icon icon {
+            get {
+                object obj = ResourceManager.GetObject("icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 ObjList.bin 的本地化字符串。
         /// </summary>
         internal static string ObjListFileName {
             get {
                 return ResourceManager.GetString("ObjListFileName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 5 的本地化字符串。
-        /// </summary>
-        internal static string Placeholder {
-            get {
-                return ResourceManager.GetString("Placeholder", resourceCulture);
             }
         }
     }

@@ -111,5 +111,13 @@ namespace DesktopInformation.DesktopObj
             }
         }
 
+        public void ResetTimerInterval()
+        {
+            timer.Stop();
+            timer.Interval = TimeSpan.FromSeconds(set.UpdateInterval);
+            timer.Start();
+
+        }
+
     }
 }

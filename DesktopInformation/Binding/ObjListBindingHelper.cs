@@ -15,7 +15,7 @@ using DesktopInformation.AddObjWindow;
 
 namespace DesktopInformation.Binding
 {
-    public class ObjListBindingHelper : IDisposable
+    public class ObjListBindingHelper
     {
         ObservableCollection<ObjListBinding> listBinding;
         WinObjManager manager;
@@ -118,10 +118,11 @@ namespace DesktopInformation.Binding
             listBinding.Remove(item);
         }
 
-        public void Dispose()
+        public void SaveConfig()
         {
             try
             {
+                set.Save();
                 File.WriteAllBytes(ObjListFileName, SerializeObject(listBinding));
             }
             catch (Exception ex)

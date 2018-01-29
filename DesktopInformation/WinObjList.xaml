@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Closing="WindowClosingEventHandler"
          WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="350" Width="525">
+        Title="桌面信息员" Height="350" Width="525">
     <Window.Resources>
         <ControlTemplate x:Key="tmpForThumb" TargetType="{x:Type Thumb}">
             <Border>
@@ -81,6 +81,7 @@
 
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4"/>
@@ -90,10 +91,12 @@
                 <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnAdjust" Grid.Column="1" Content="调整" IsEnabled="False"  Click="BtnAdjustClickEventHandler"/>
-            <Button x:Name="btnEdit" Grid.Column="3" Content="编辑"  IsEnabled="False"  Click="BtnEditClickEventHandler"/>
-            <Button x:Name="btnDelete" Grid.Column="5" Content="删除"  IsEnabled="False" Click="BtnDeleteClickEventHandler" />
-            <Button x:Name="btnAdd" Grid.Column="7" Content="添加" Click="BtnAddClickEventHandler"/>
+            <Button x:Name="btnSettings"  Content="设置"  Click="BtnSettingsClickEventHandler"/>
+            <Button x:Name="btnChangeStatues" Grid.Column="2" Content="状态" IsEnabled="False"  Click="BtnChangeStatuesClickEventHandler"/>
+            <Button x:Name="btnAdjust" Grid.Column="4" Content="调整" IsEnabled="False"  Click="BtnAdjustClickEventHandler"/>
+            <Button x:Name="btnEdit" Grid.Column="6" Content="编辑"  IsEnabled="False"  Click="BtnEditClickEventHandler"/>
+            <Button x:Name="btnDelete" Grid.Column="8" Content="删除"  IsEnabled="False" Click="BtnDeleteClickEventHandler" />
+            <Button x:Name="btnAdd" Grid.Column="10" Content="添加" Click="BtnAddClickEventHandler"/>
 
         </Grid>
         
