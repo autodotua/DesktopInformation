@@ -31,11 +31,13 @@ namespace DesktopInformation
             InitializeComponent();
             chkStartup.IsChecked = System.IO.File.Exists(path);
             sldUpdate.Value = set.UpdateInterval;
+            chkHide.IsChecked = set.AutoHide;
         }
 
         private void BtnSaveClickEventHandler(object sender, RoutedEventArgs e)
         {
             set.UpdateInterval = (int)sldUpdate.Value;
+            set.AutoHide = chkHide.IsChecked.Value;
             if(System.IO.File.Exists(path) && (!chkStartup.IsChecked.Value))
             {
                 RemoveStartup();

@@ -64,7 +64,7 @@
 
         </Grid.RowDefinitions>
         <ListView x:Name="lvw" ItemsSource="{Binding}"   ScrollViewer.CanContentScroll="False" 
-                  SelectionChanged="LvwSelectionChangedEventHandler"
+                  SelectionChanged="LvwSelectionChangedEventHandler" PreviewKeyDown="LvwPreviewKeyDownEventHandler"
                       Background="{DynamicResource backgroundBrushColor}" Foreground="Black" BorderThickness="0">
 
             <ListView.View>
@@ -94,8 +94,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="btnSettings"  Content="设置"  Click="BtnSettingsClickEventHandler"/>
-            <Button x:Name="btnChangeStatues" Grid.Column="2" Content="状态" IsEnabled="False"  Click="BtnChangeStatuesClickEventHandler"/>
-            <Button x:Name="btnAdjust" Grid.Column="4" Content="调整" IsEnabled="False"  Click="BtnAdjustClickEventHandler"/>
+            <Button x:Name="btnChangeStatues" Grid.Column="2" Content="状态" IsEnabled="False"  Click="BtnSetStatuesClickEventHandler"/>
+            <Button x:Name="btnAdjust" Grid.Column="4" Content="调整"  Click="BtnAdjustClickEventHandler"/>
             <Button x:Name="btnEdit" Grid.Column="6" Content="编辑"  IsEnabled="False"  Click="BtnEditClickEventHandler"/>
             <Button x:Name="btnDelete" Grid.Column="8" Content="删除"  IsEnabled="False" Click="BtnDeleteClickEventHandler" />
             <Button x:Name="btnAdd" Grid.Column="10" Content="添加" Click="BtnAddClickEventHandler"/>

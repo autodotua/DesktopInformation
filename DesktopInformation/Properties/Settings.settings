@@ -8,5 +8,8 @@
     <Setting Name="NetworkAdapter" Type="System.String" Scope="User">
       <Value Profile="(Default)">Intel[R] Dual Band Wireless-AC 7260</Value>
     </Setting>
+    <Setting Name="AutoHide" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

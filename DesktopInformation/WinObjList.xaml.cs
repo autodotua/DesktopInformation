@@ -31,12 +31,19 @@ namespace DesktopInformation
         public WinObjList()
         {
             InitializeComponent();
+            
             set = new Properties.Settings();
             manager = new WinObjManager(set);
             helper = new ObjListBindingHelper(lvw, manager, set);
+
+            Visibility = set.AutoHide ? Visibility.Hidden : Visibility.Visible;
+
+
             InitialTray();
         }
-
+        /// <summary>
+        /// 初始化托盘
+        /// </summary>
         private void InitialTray()
         {
 
@@ -72,7 +79,10 @@ namespace DesktopInformation
             };
 
         }
-
+        /// <summary>
+        /// 显示托盘图标菜单
+        /// </summary>
+        /// <param name="sender"></param>
         private void ShowNotifyIconMenu(object sender)
         {
             MenuItem menuSettings = new MenuItem() { Header = "设置" };
@@ -103,8 +113,6 @@ namespace DesktopInformation
                   menu.IsOpen = false;
               };
         }
-
-
         /// <summary>
         /// 单击新增按钮事件
         /// </summary>
@@ -121,6 +129,14 @@ namespace DesktopInformation
             menuBar.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Bar);
             MenuItem menuPie = new MenuItem() { Header = "饼图" };
             menuPie.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Pie);
+            MenuItem menuClone = new MenuItem() { Header = "克隆选中" };
+            menuClone.Click += (p1, p2) =>
+              {
+                  foreach (var i in lvw.SelectedItems)
+                  {
+                      helper.Clone(i as ObjListBinding);
+                  }
+              };
             ContextMenu menu = new ContextMenu()
             {
                 IsOpen = true,
@@ -129,9 +145,14 @@ namespace DesktopInformation
                 {
                     menuText,
                    menuPlainText,
-                   menuBar
+                   menuBar,
+                   menuPie,
                 }
             };
+            if(lvw.SelectedIndex!=-1)
+            {
+                menu.Items.Add(menuClone);
+            }
         }
         /// <summary>
         /// 窗体关闭事件
@@ -170,9 +191,16 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void BtnAdjustClickEventHandler(object sender, RoutedEventArgs e)
         {
-            foreach (var i in lvw.SelectedItems)
+            if (lvw.SelectedIndex != -1)
             {
-                manager.Adjust(i as ObjListBinding);
+                foreach (var i in lvw.SelectedItems)
+                {
+                    manager.Adjust(i as ObjListBinding);
+                }
+            }
+            else
+            {
+                manager.Adjust();
             }
         }
         /// <summary>
@@ -182,7 +210,7 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void LvwSelectionChangedEventHandler(object sender, SelectionChangedEventArgs e)
         {
-            btnEdit.IsEnabled = btnAdjust.IsEnabled = btnChangeStatues.IsEnabled = btnDelete.IsEnabled = (lvw.SelectedIndex >= 0);
+            btnEdit.IsEnabled  = btnChangeStatues.IsEnabled = btnDelete.IsEnabled = (lvw.SelectedIndex >= 0);
             if ((lvw.SelectedItem as ObjListBinding)?.Statue == Enums.Statue.Stoped)
             {
                 btnEdit.IsEnabled = false;
@@ -213,7 +241,11 @@ namespace DesktopInformation
                 }
             };
         }
-
+        /// <summary>
+        /// 单击删除事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnDeleteClickEventHandler(object sender, RoutedEventArgs e)
         {
             var selectedItems = lvw.SelectedItems.Cast<ObjListBinding>().ToArray();
@@ -222,14 +254,39 @@ namespace DesktopInformation
                 manager.RemoveWindow(i);
                 helper.RemoveItem(i);
             }
-
         }
-
-        private void BtnChangeStatuesClickEventHandler(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 单击状态事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnSetStatuesClickEventHandler(object sender, RoutedEventArgs e)
         {
-
+            IEnumerable<ObjListBinding> items = lvw.SelectedItems.Cast<ObjListBinding>();
+            MenuItem menuRunning = new MenuItem() { Header = "运行" };
+            menuRunning.Click += (p1, p2) => helper.SetStatues(items,Enums.Statue.Running);
+            MenuItem menuPausing= new MenuItem() { Header = "暂停" };
+            menuPausing.Click += (p1, p2) => helper.SetStatues(items, Enums.Statue.Pausing);
+            MenuItem menuStopped = new MenuItem() { Header = "停止" };
+            menuStopped.Click += (p1, p2) => helper.SetStatues(items, Enums.Statue.Stoped);
+            ContextMenu menu = new ContextMenu()
+            {
+                IsOpen = true,
+                PlacementTarget = sender as UIElement,
+                Items =
+                {
+                    menuRunning,
+                   menuPausing,
+                   menuStopped,
+                }
+            };
         }
-
+        
+        /// <summary>
+        /// 单击设置按钮事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnSettingsClickEventHandler(object sender, RoutedEventArgs e)
         {
             WinSettings win = new WinSettings(set);
@@ -237,6 +294,25 @@ namespace DesktopInformation
             if (win.DialogResult.HasValue && win.DialogResult.Value)
             {
                 manager.ResetTimerInterval();
+            }
+        }
+        /// <summary>
+        /// 在列表上按下键盘事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LvwPreviewKeyDownEventHandler(object sender, KeyEventArgs e)
+        {
+            if(lvw.SelectedIndex!=-1)
+            {
+                if(e.Key==Key.Delete)
+                {
+                    BtnDeleteClickEventHandler(null, null);
+                }
+                else if(e.Key==Key.Enter)
+                {
+                    BtnEditClickEventHandler(null, null);
+                }
             }
         }
     }

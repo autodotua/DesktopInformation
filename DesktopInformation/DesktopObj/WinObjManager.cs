@@ -54,10 +54,18 @@ namespace DesktopInformation.DesktopObj
 
         public void Adjust(ObjListBinding item)
         {
-            if (wins.ContainsValue(item))
-            {
+          //  if (wins.ContainsValue(item))
+          //  {
                 WinObjBase win = wins.FirstOrDefault(p => p.Value == item).Key;
                 win.Adjuest = !win.Adjuest;
+           // }
+        }
+
+        public void Adjust()
+        {
+            foreach (var i in wins)
+            {
+                i.Key.Adjuest = !i.Key.Adjuest;
             }
         }
 
@@ -76,22 +84,19 @@ namespace DesktopInformation.DesktopObj
             {
                 case Text:
                     win = new WinTextObj(item,set, deviceInfo);
-                    win.Load();
-                    wins.Add(win, item);
-                    win.Show();
                     break;
                 case PlainText:
                     win = new WinPlainTextObj(item,set);
-                    win.Load();
-                    wins.Add(win, item);
-                    win.Show();
                     break;
                 case Bar:
                     win = new WinBarObj(item,set, deviceInfo);
-                    win.Load();
-                    wins.Add(win, item);
-                    win.Show();
                     break;
+            }
+            if(item.Statue!=Enums.Statue.Stoped)
+            {
+                win.Load();
+                wins.Add(win, item);
+                win.Show();
             }
         }
 

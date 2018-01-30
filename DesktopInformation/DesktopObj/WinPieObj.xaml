@@ -1,4 +1,4 @@
-﻿<src:WinPercentageDataTypeObjBase x:Class="DesktopInformation.DesktopObj.WinBarObj"
+﻿<src:WinPercentageDataTypeObjBase x:Class="DesktopInformation.DesktopObj.WinPieObj"
                 xmlns:src="clr-namespace:DesktopInformation.DesktopObj"
 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

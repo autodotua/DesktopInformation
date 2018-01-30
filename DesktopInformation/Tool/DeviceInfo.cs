@@ -33,7 +33,7 @@ namespace DesktopInformation.Tools
                 adapter = adapters.ToArray()[0];
                 monitor.StartMonitoring();
             }
-            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            cpuCounter = new PerformanceCounter("Processor", "% Idle Time", "_Total");
             cpuCounter.NextValue();
             // computer.Open();
             Update();
@@ -47,7 +47,7 @@ namespace DesktopInformation.Tools
         {
             systemInfo = systemInfoSearcher.Get().Cast<ManagementObject>().ToArray()[0];
             batteryInfo = batteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
-            cpuUsage = cpuCounter.NextValue();
+            cpuUsage = 100-cpuCounter.NextValue();
 
         }
         //[DllImport("kernel32.dll")]
@@ -83,10 +83,12 @@ namespace DesktopInformation.Tools
         /// </summary>
         public double ProcessCount => double.Parse(systemInfo["NumberOfProcesses"].ToString());
         /// <summary>
-        /// 电池电压（V）
+        /// 电池1电压（V）
         /// </summary>
         public double Battery1Voltage => double.Parse(batteryInfo[0]["Voltage"].ToString()) / 1000;
-
+        /// <summary>
+        /// 电池2电压（V）
+        /// </summary>
         public double Battery2Voltage => double.Parse(batteryInfo[1]["Voltage"].ToString()) / 1000;
         /// <summary>
         /// 电池1功率（W，充电为正）

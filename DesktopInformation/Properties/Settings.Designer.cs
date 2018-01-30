@@ -46,5 +46,17 @@ namespace DesktopInformation.Properties {
                 this["NetworkAdapter"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoHide {
+            get {
+                return ((bool)(this["AutoHide"]));
+            }
+            set {
+                this["AutoHide"] = value;
+            }
+        }
     }
 }

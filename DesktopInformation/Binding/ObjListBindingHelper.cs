@@ -45,14 +45,12 @@ namespace DesktopInformation.Binding
             manager.Load(listBinding.ToArray());
         }
 
-        public void AddItem(InfoType type, ObjListBinding item)
+        private void AddItemToList(InfoType type, ObjListBinding item)
         {
             item.Type = type;
             listBinding.Add(item);
         }
-
-
-
+        
         public void OpenEditWindow(InfoType type)
         {
             WinAddObjBase win = null;
@@ -64,7 +62,7 @@ namespace DesktopInformation.Binding
                     win.ShowDialog();
                     if (win.DialogResult == true)
                     {
-                       AddItem(type, item);
+                       AddItemToList(type, item);
                     }
                     break;
                 case InfoType.PlainText:
@@ -72,7 +70,7 @@ namespace DesktopInformation.Binding
                     win.ShowDialog();
                     if (win.DialogResult == true)
                     {
-                        AddItem(type, item);
+                        AddItemToList(type, item);
                     }
                     break;
                 case InfoType.Bar:
@@ -80,7 +78,7 @@ namespace DesktopInformation.Binding
                     win.ShowDialog();
                     if (win?.DialogResult == true)
                     {
-                       AddItem(type, item);
+                       AddItemToList(type, item);
                     }
                     break;
             }
@@ -115,9 +113,26 @@ namespace DesktopInformation.Binding
             }
         }
 
+        public void Clone(ObjListBinding item)
+        {
+            ObjListBinding newItem = item.Clone();
+            listBinding.Add(newItem);
+            manager.AddWindow(newItem);
+        }
+
         public void RemoveItem(ObjListBinding item)
         {
             listBinding.Remove(item);
+        }
+
+        public void SetStatues(IEnumerable<ObjListBinding> items, Statue statue)
+        {
+            foreach (var i in items)
+            {
+                i.Statue = statue;
+                manager.SetStatue(i, statue);
+            }
+            CollectionViewSource.GetDefaultView(listBinding).Refresh();
         }
 
         public void SaveConfig()

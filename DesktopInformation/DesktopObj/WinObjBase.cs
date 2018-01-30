@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
@@ -15,11 +16,11 @@ namespace DesktopInformation.DesktopObj
 {
 
 
-    public abstract class WinObjBase:Window
+    public abstract class WinObjBase : Window
     {
         protected Properties.Settings set;
         protected Binding.ObjListBinding item;
-        public WinObjBase(Binding.ObjListBinding item,Properties.Settings set):base()
+        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set) : base()
         {
             this.set = set;
             this.item = item;
@@ -28,7 +29,7 @@ namespace DesktopInformation.DesktopObj
             Height = item.Height;
             Left = item.Left;
             Top = item.Top;
-
+            FocusVisualStyle = null;
             WindowStyle = WindowStyle.None;
             ShowInTaskbar = false;
             AllowsTransparency = true;
@@ -42,14 +43,78 @@ namespace DesktopInformation.DesktopObj
             PreviewMouseLeftButtonDown += (p1, p2) => DragMove();
             Loaded += (p1, p2) =>
             {
-                SetToStickOnDesktop();
+                winHandle = new WindowInteropHelper(this).Handle;
+
                 SetToMouseThrough();
+                SetToStickOnDesktop();
+
             };
-            
+            PreviewKeyDown += WinObjBasePreviewKeyDownEventHandler;
 
         }
 
-        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set,DeviceInfo deviceInfo) : this(item,set)
+        private void WinObjBasePreviewKeyDownEventHandler(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (Adjuest)
+            {
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                {
+                    switch (e.Key)
+                    {
+                        case Key.Left:
+                            Width--;
+                            break;
+                        case Key.Right:
+                            Width++;
+                            break;
+                        case Key.Up:
+                            Height++;
+                            break;
+                        case Key.Down:
+                            Height--;
+                            break;
+                    }
+                }
+                else if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    switch (e.Key)
+                    {
+                        case Key.Left:
+                            Left-=10;
+                            break;
+                        case Key.Right:
+                            Left += 10;
+                            break;
+                        case Key.Up:
+                            Top -= 10;
+                            break;
+                        case Key.Down:
+                            Top += 10;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (e.Key)
+                    {
+                        case Key.Left:
+                            Left--;
+                            break;
+                        case Key.Right:
+                            Left++;
+                            break;
+                        case Key.Up:
+                            Top--;
+                            break;
+                        case Key.Down:
+                            Top++;
+                            break;
+                    }
+                }
+            }
+        }
+
+        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set, DeviceInfo deviceInfo) : this(item, set)
         {
             DeviceInfo = deviceInfo;
         }
@@ -57,6 +122,9 @@ namespace DesktopInformation.DesktopObj
 
 
         #region WinAPI
+
+
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPTStr)] string lpClassName, [MarshalAs(UnmanagedType.LPTStr)] string lpWindowName);
 
@@ -66,6 +134,16 @@ namespace DesktopInformation.DesktopObj
         [DllImport("user32.dll")]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
+
+        [DllImport("user32.dll")]
+        public static extern int GetWindowLong(IntPtr hwnd, int index);
+
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+        public const int WS_EX_TRANSPARENT = 0x00000020;
+        public const int GWL_EXSTYLE = (-20);
+        public const int WS_EX_TOOLWINDOW = 0x00000080;
+        IntPtr winHandle;
         public void SetToStickOnDesktop()
         {
             IntPtr pWnd = FindWindow("Progman", null);
@@ -74,31 +152,18 @@ namespace DesktopInformation.DesktopObj
             SetParent(new WindowInteropHelper(this).Handle, pWnd);
         }
 
-        [DllImport("user32.dll")]
-        public static extern int GetWindowLong(IntPtr hwnd, int index);
-
-        [DllImport("user32.dll")]
-        public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
-        int extendedStyle;
-        public const int WS_EX_TRANSPARENT = 0x00000020;
-        public const int GWL_EXSTYLE = (-20);
         private void SetToMouseThrough()
         {
-
-            // Get this window's handle
-            IntPtr hwnd = new WindowInteropHelper(this).Handle;
-
-            // Change the extended window style to include WS_EX_TRANSPARENT
-            extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+            //extendedStyle = GetWindowLong(winHandle, GWL_EXSTYLE);
+            SetWindowLong(winHandle, GWL_EXSTYLE, WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW);
         }
         private void SetToNoMouseThrough()
         {
-            IntPtr hwnd = new WindowInteropHelper(this).Handle;
-            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle);
+            SetWindowLong(winHandle, GWL_EXSTYLE, 0);
         }
+
         #endregion
-        
+
         public abstract void Update();
         public abstract void Load();
         public abstract void UpdateDisplay();
@@ -127,7 +192,7 @@ namespace DesktopInformation.DesktopObj
             }
             get => adjuesting;
         }
-       public abstract DeviceInfo DeviceInfo { get; set; }
+        public abstract DeviceInfo DeviceInfo { get; set; }
 
         protected Brush ToBrush(string color)
         {

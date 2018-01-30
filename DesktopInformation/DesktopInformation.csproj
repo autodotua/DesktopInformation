@@ -86,6 +86,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DesktopObj\WinPieObj.xaml.cs">
+      <DependentUpon>WinPieObj.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,10 @@
     <Page Include="AddObjWindow\WinAddTextObj.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DesktopObj\WinPieObj.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="DesktopObj\WinBarObj.xaml">
       <SubType>Designer</SubType>

@@ -25,6 +25,27 @@ namespace DesktopInformation.Binding
             }
         }
 
+        public ObjListBinding Clone()
+        {
+            return new ObjListBinding()
+            {
+                Type = Type,
+                Statue = Statue,
+                Name = Name.Clone() as string,
+                Value = Value.Clone() as string,
+                Left =Left,
+                Top=Top,
+                Width=Width,
+                Height=Height,
+                ForegroundColor=ForegroundColor.Clone() as string,
+                BackgounrdColor=BackgounrdColor.Clone() as string,
+                BorderColor=BorderColor.Clone() as string,
+                BorderThickness=BorderThickness,
+                ForcedAbsolute=ForcedAbsolute,
+                Animation=Animation,
+            };
+        }
+        
         public InfoType Type { get; set; }
         public Statue Statue { get; set; }
         public string ShownType
@@ -79,6 +100,8 @@ namespace DesktopInformation.Binding
         
         public bool ForcedAbsolute { get; set; } 
         public bool Animation { get; set; }
+
+
     }
     
 }

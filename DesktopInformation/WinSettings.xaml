@@ -22,8 +22,8 @@
             <ColumnDefinition Width="8"/>
             <ColumnDefinition Width="64"/>
         </Grid.ColumnDefinitions>
-        <CheckBox x:Name="chkAnimation" Content=""/>
-        <CheckBox x:Name="chkStartup" Grid.Row="2" Content="开机启动"/>
+        <CheckBox x:Name="chkHide" Content="打开程序自动后台" Grid.ColumnSpan="3"/>
+        <CheckBox x:Name="chkStartup" Grid.Row="2" Content="开机启动"  Grid.ColumnSpan="3"/>
         <StackPanel Orientation="Horizontal"   Grid.Row="4">
             <TextBlock Text="刷新间隔：" />
             <TextBlock x:Name="tbkSldValue"/>
