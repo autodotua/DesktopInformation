@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -22,7 +23,7 @@ namespace DesktopInformation.DesktopObj
         public WinBarObj(Binding.ObjListBinding item, Properties.Settings set, Tools.DeviceInfo deviceInfo) :base(item,set,deviceInfo)
         {
             InitializeComponent();
-            UpdateDisplay();
+            //UpdateDisplay();
         }
 
         public override void UpdateDisplay()
@@ -39,7 +40,7 @@ namespace DesktopInformation.DesktopObj
             
             if (item.Animation)
             {
-                Tools.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5);
+                Tools.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5, 0, null, false, new CubicEase() { EasingMode = EasingMode.EaseInOut });
             }
             else
             {

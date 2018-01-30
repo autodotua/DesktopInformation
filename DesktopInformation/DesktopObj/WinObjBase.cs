@@ -174,7 +174,8 @@ namespace DesktopInformation.DesktopObj
             {
                 adjuesting = value;
                 Background = new SolidColorBrush(value ? Colors.Gray : Colors.Transparent);
-                BorderThickness = new Thickness((value ? 4 : item.BorderThickness));
+     
+                    BorderThickness = new Thickness((value ? 4 : ((this is WinPieObj)?0:item.BorderThickness)));
                 ResizeMode = value ? ResizeMode.CanResize : ResizeMode.NoResize;
                 IsHitTestVisible = value;
                 if (value)

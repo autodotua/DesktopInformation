@@ -31,7 +31,7 @@ namespace DesktopInformation
         public WinObjList()
         {
             InitializeComponent();
-            
+
             set = new Properties.Settings();
             manager = new WinObjManager(set);
             helper = new ObjListBindingHelper(lvw, manager, set);
@@ -129,7 +129,7 @@ namespace DesktopInformation
             menuBar.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Bar);
             MenuItem menuPie = new MenuItem() { Header = "饼图" };
             menuPie.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Pie);
-            MenuItem menuClone = new MenuItem() { Header = "克隆选中" };
+            MenuItem menuClone = new MenuItem() { Header = "建立副本" };
             menuClone.Click += (p1, p2) =>
               {
                   foreach (var i in lvw.SelectedItems)

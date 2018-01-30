@@ -22,15 +22,15 @@ namespace DesktopInformation.DesktopObj
         public WinPieObj(Binding.ObjListBinding item, Properties.Settings set, Tools.DeviceInfo deviceInfo) :base(item,set,deviceInfo)
         {
             InitializeComponent();
-            UpdateDisplay();
+            //UpdateDisplay();
         }
 
         public override void UpdateDisplay()
         {
-            bar.Foreground = ToBrush(item.ForegroundColor);
-            bar.Background = ToBrush(item.BackgounrdColor);
-            bar.BorderBrush = ToBrush(item.BorderColor);
-            bar.BorderThickness = new Thickness(item.BorderThickness);
+            pie.Foreground =(SolidColorBrush) ToBrush(item.ForegroundColor);
+            pie.Background = (SolidColorBrush)ToBrush(item.BackgounrdColor);
+            pie.BorderBrush = ToBrush(item.BorderColor);
+            pie.BorderThickness = item.BorderThickness;
         }
 
         public override void Update()
@@ -39,11 +39,11 @@ namespace DesktopInformation.DesktopObj
             
             if (item.Animation)
             {
-                Tools.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5);
+                pie.AnimationToValue(value / (max - min));
             }
             else
             {
-                bar.Value = value / (max - min);
+                //pie.Value = value / (max - min);
             }
         }
         

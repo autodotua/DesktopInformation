@@ -49,7 +49,7 @@ namespace DesktopInformation.DesktopObj
             {
                 strMax = temp[2];
             }
-
+            UpdateDisplay();
 
         }
 

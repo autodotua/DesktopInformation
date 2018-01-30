@@ -60,30 +60,23 @@ namespace DesktopInformation.Binding
                 case InfoType.Text:
                     win = new WinAddTextObj(item,"请输入含通配符的内容");
                     win.ShowDialog();
-                    if (win.DialogResult == true)
-                    {
-                       AddItemToList(type, item);
-                    }
                     break;
                 case InfoType.PlainText:
                     win = new WinAddTextObj(item,"请输入内容");
                     win.ShowDialog();
-                    if (win.DialogResult == true)
-                    {
-                        AddItemToList(type, item);
-                    }
                     break;
                 case InfoType.Bar:
                     win = new WinAddPercentageDataTypeObj(item);
                     win.ShowDialog();
-                    if (win?.DialogResult == true)
-                    {
-                       AddItemToList(type, item);
-                    }
+                    break;
+                case InfoType.Pie:
+                    win = new WinAddPercentageDataTypeObj(item);
+                    win.ShowDialog();
                     break;
             }
             if (win?.DialogResult == true)
             {
+                AddItemToList(type, item);
                 manager.AddWindow(item);
             }
         }
@@ -102,6 +95,10 @@ namespace DesktopInformation.Binding
                     win.ShowDialog();
                     break;
                 case InfoType.Bar:
+                    win = new WinAddPercentageDataTypeObj(item);
+                    win.ShowDialog();
+                    break;
+                case InfoType.Pie:
                     win = new WinAddPercentageDataTypeObj(item);
                     win.ShowDialog();
                     break;

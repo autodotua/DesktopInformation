@@ -89,6 +89,9 @@
     <Compile Include="DesktopObj\WinPieObj.xaml.cs">
       <DependentUpon>WinPieObj.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ProgressPie.xaml.cs">
+      <DependentUpon>ProgressPie.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
@@ -113,6 +116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DesktopObj\WinTextObj.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ProgressPie.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

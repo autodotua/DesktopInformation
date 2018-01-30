@@ -91,6 +91,9 @@ namespace DesktopInformation.DesktopObj
                 case Bar:
                     win = new WinBarObj(item,set, deviceInfo);
                     break;
+                case Pie:
+                    win = new WinPieObj(item, set, deviceInfo);
+                    break;
             }
             if(item.Statue!=Enums.Statue.Stoped)
             {
