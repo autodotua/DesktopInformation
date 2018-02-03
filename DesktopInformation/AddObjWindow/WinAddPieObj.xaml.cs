@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesktopInformation.Tool;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,13 +19,18 @@ namespace DesktopInformation.AddObjWindow
     /// <summary>
     /// WinAddPercentageDataTypeObj.xaml 的交互逻辑
     /// </summary>
-    public partial class WinAddPercentageDataTypeObj : WinAddObjBase
+    public partial class WinAddPieObj : WinAddObjBase
     {
-        public WinAddPercentageDataTypeObj(Binding.ObjListBinding item):base(item)
+        string[] supportList = DeviceInfo.SupportInfo.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+
+        public WinAddPieObj(Binding.ObjListBinding item):base(item)
         {
             InitializeComponent();
             txtName.Text = item.Name;
-
+            foreach (var i in supportList)
+            {
+                cbbValue.Items.Add(i);
+            }
             string[] temp = item.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
             if(temp.Length==3)
             {
@@ -44,7 +50,6 @@ namespace DesktopInformation.AddObjWindow
             string min = txtMin.Text;
             string value = txtValue.Text;
             string max = txtMax.Text;
-            string[] supportList = Tools.DeviceInfo.supportInfo.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
             if ((!double.TryParse(min, out double dMin)) && (!supportList.Contains(min)))
             {
                 return "格式有误！";
@@ -89,7 +94,7 @@ namespace DesktopInformation.AddObjWindow
             }
             else
             {
-                Tools.Tools.ShowAlert(check);
+                Tool.Tools.ShowAlert(check);
             }
         }
     }

@@ -86,16 +86,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddObjWindow\WinAddPieObj.xaml.cs">
+      <DependentUpon>WinAddPieObj.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DesktopObj\WinPieObj.xaml.cs">
       <DependentUpon>WinPieObj.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tool\Aida64Linker.cs" />
+    <Compile Include="Tool\DataManager.cs" />
     <Compile Include="UserControls\ProgressPie.xaml.cs">
       <DependentUpon>ProgressPie.xaml</DependentUpon>
     </Compile>
     <Compile Include="WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
-    <Page Include="AddObjWindow\WinAddPercentageDataTypeObj.xaml">
+    <Page Include="AddObjWindow\WinAddPieObj.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="AddObjWindow\WinAddBarObj.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -136,8 +145,8 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="AddObjWindow\WinAddObjBase.cs" />
-    <Compile Include="AddObjWindow\WinAddPercentageDataTypeObj.xaml.cs">
-      <DependentUpon>WinAddPercentageDataTypeObj.xaml</DependentUpon>
+    <Compile Include="AddObjWindow\WinAddBarObj.xaml.cs">
+      <DependentUpon>WinAddBarObj.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

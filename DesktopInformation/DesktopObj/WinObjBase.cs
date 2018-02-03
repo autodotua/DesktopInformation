@@ -1,4 +1,4 @@
-﻿using DesktopInformation.Tools;
+﻿using DesktopInformation.Tool;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +20,12 @@ namespace DesktopInformation.DesktopObj
     {
         protected Properties.Settings set;
         protected Binding.ObjListBinding item;
+
+        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set,DataManager dataManager):this(item,set)
+        {
+            this.dataManager = dataManager;
+        }
+
         public WinObjBase(Binding.ObjListBinding item, Properties.Settings set) : base()
         {
             this.set = set;
@@ -114,11 +120,6 @@ namespace DesktopInformation.DesktopObj
             }
         }
 
-        public WinObjBase(Binding.ObjListBinding item, Properties.Settings set, DeviceInfo deviceInfo) : this(item, set)
-        {
-            DeviceInfo = deviceInfo;
-        }
-
 
 
         #region WinAPI
@@ -193,7 +194,7 @@ namespace DesktopInformation.DesktopObj
             }
             get => adjuesting;
         }
-        public abstract DeviceInfo DeviceInfo { get; set; }
+        public DataManager dataManager;
 
         protected Brush ToBrush(string color)
         {

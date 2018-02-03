@@ -1,4 +1,4 @@
-﻿<src:WinAddObjBase x:Class="DesktopInformation.AddObjWindow.WinAddPercentageDataTypeObj"
+﻿<src:WinAddObjBase x:Class="DesktopInformation.AddObjWindow.WinAddBarObj"
                 xmlns:src="clr-namespace:DesktopInformation.AddObjWindow"
 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,7 +9,7 @@
                      xmlns:uc="clr-namespace:DesktopInformation.UserControls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         SizeToContent="Height" 
-        Title="WinAddPercentageDataTypeObj" Width="300">
+        Title="新建直条 - 桌面信息员" Width="300">
     <local:WinAddObjBase.Resources>
         <Style x:Key="txtColorStyle" TargetType="{x:Type TextBox}">
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
@@ -45,11 +45,15 @@
                 <ColumnDefinition Width="8"/>
             </Grid.ColumnDefinitions>
             <uc:UcHintTextBox x:Name="txtMin" HintText="最低值" Grid.Column="0"/>
-            <uc:UcHintTextBox x:Name="txtValue" HintText="当前值" Grid.Column="2"/>
+            <ComboBox x:Name="cbbValue" Grid.Column="2"/>
             <uc:UcHintTextBox x:Name="txtMax" HintText="最大值" Grid.Column="4"/>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="4"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="4"/>
                 <RowDefinition Height="Auto"/>
@@ -73,7 +77,12 @@
             <TextBox x:Name="txtBorderThickness" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center"   Text="0" Style="{DynamicResource txtColorStyle}"/>
             <TextBlock Text="边框颜色：" Grid.Row="6" VerticalAlignment="Center"/>
             <TextBox x:Name="txtBorderColor" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"   Text="#FFFFFFFF" BorderBrush="{Binding Text, ElementName=txtBorderColor, Mode=OneWay}" Style="{DynamicResource txtColorStyle}"/>
-            <CheckBox x:Name="chkAnimation" IsChecked="True" Grid.Row="8" Grid.ColumnSpan="3" Content="刷新动画"/>
+            <ComboBox x:Name="cbbOrientation" Grid.Row="8" >
+                <ComboBoxItem Content="水平"/>
+                <ComboBoxItem Content="垂直"/>
+            </ComboBox>
+            <CheckBox x:Name="chkReverse" Grid.Row="10" Grid.ColumnSpan="3" Content="翻转"/>
+            <CheckBox x:Name="chkAnimation" IsChecked="True" Grid.Row="12" Grid.ColumnSpan="3" Content="刷新动画"/>
 
         </Grid>
         <Grid Grid.Row="4">
@@ -83,13 +92,10 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <uc:UcHintTextBox x:Name="txtName" HintText="请输入名称"/>
             <Button Grid.Column="2" Content="帮助"/>
-            <Button Grid.Column="4" Content="添加"/>
-            <Button Grid.Column="6" Content="确定" Click="Button_Click"/>
+            <Button Grid.Column="4" Content="确定" Click="Button_Click"/>
 
         </Grid>
     </Grid>

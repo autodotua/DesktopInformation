@@ -10,16 +10,28 @@ using System.Threading.Tasks;
 using System.Windows;
 using static System.Windows.Forms.SystemInformation;
 
-namespace DesktopInformation.Tools
+namespace DesktopInformation.Tool
 {
     public class DeviceInfo
     {
         /// <summary>
         /// 支持的系统信息正则子串
         /// </summary>
-        public static string supportInfo = "TotalMemory|MemoryUsage|FreeMemory|UsedMemory|ProcessCount|CpuUsage|" +
-            "DownloadSpeedKB|DownloadSpeedMB|UploadSpeedKB|UploadSpeedMB|" +
-            "Battery1Voltage|Battery2Voltage|Battery1Rate|Battery2Rate|BatteryPercent|BatteryRemainHours|BatteryRemainMinutes|BatteryRemainTotalHours|BatteryRemainTotalMinutes";
+        public static string SupportInfo
+        {
+            get
+            {
+                StringBuilder str = new StringBuilder("TotalMemory|MemoryUsage|FreeMemory|UsedMemory|ProcessCount|CpuUsage|" +
+             "DownloadSpeedKB|DownloadSpeedMB|UploadSpeedKB|UploadSpeedMB|" +
+             "Battery1Voltage|Battery2Voltage|Battery1Rate|Battery2Rate|BatteryPercent|" +
+             "BatteryRemainHours|BatteryRemainMinutes|BatteryRemainTotalHours|BatteryRemainTotalMinutes");
+                foreach (var i in Aida64Linker.GetSupportValueName())
+                {
+                    str.Append("|AIDA64_" + i);
+                }
+                return str.ToString();
+            }
+        }
         private NetworkMonitor monitor;
         NetworkAdapter adapter = null;
         Properties.Settings set;

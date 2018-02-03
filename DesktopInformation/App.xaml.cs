@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using static DesktopInformation.Tools.Tools;
+using static DesktopInformation.Tool.Tools;
 
 namespace DesktopInformation
 {

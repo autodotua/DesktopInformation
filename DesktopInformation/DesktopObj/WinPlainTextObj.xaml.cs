@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using DesktopInformation.Tools;
+using DesktopInformation.Tool;
 
 namespace DesktopInformation.DesktopObj
 {
@@ -26,8 +26,7 @@ namespace DesktopInformation.DesktopObj
 
             InitializeComponent();
         }
-
-        public override DeviceInfo DeviceInfo { get; set; }
+        
 
         public override void Load()
         {

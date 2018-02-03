@@ -14,8 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DesktopInformation.Properties;
-using static DesktopInformation.Tools.Tools;
-using static DesktopInformation.Tools.DeviceInfo;
+using static DesktopInformation.Tool.Tools;
+using static DesktopInformation.Tool.DeviceInfo;
+using DesktopInformation.Tool;
 
 namespace DesktopInformation.DesktopObj
 {
@@ -24,15 +25,15 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinTextObj : WinObjBase
     {
-        public WinTextObj(Binding.ObjListBinding item, Settings set, Tools.DeviceInfo deviceInfo) : base(item,set,deviceInfo)
+        public WinTextObj(Binding.ObjListBinding item, Settings set,DataManager dataManager) : base(item,set,dataManager)
         {
             
             InitializeComponent();
 
 
-            normal = @"\{(?<Type>" + supportDateTime + "|" + supportInfo + @")\}";
+            normal = @"\{(?<Type>" + supportDateTime + "|" + SupportInfo + @")\}";
             Timing = @"\{(?<TimingName>[a-zA-Z0-9]+):(?<Type>" + supportTimeSpan + @")\}";
-            NormalWithFormat = @"\{(?<Type>" + supportDateTime + "|" + supportInfo + @"):(?<Length>[0-9]{1,2})\.(?<Decimal>[0-9])\}";
+            NormalWithFormat = @"\{(?<Type>" + supportDateTime + "|" + SupportInfo + @"):(?<Length>[0-9]{1,2})\.(?<Decimal>[0-9])\}";
             TimingWithFormat = @"\{(?<TimingName>[a-zA-Z0-9]+):(?<Type>" + supportTimeSpan + @"):(?<Length>[0-9]{1,2})\.(?<Decimal>[0-9])\}";
             rNormal = new Regex(normal, RegexOptions.Compiled);
             rTiming = new Regex(Timing, RegexOptions.Compiled);
@@ -198,15 +199,15 @@ namespace DesktopInformation.DesktopObj
         {
             if (rNormal.IsMatch(text))
             {
-                return GetValue(rNormal.Match(text).Groups["Type"].Value);
-            }
+                return dataManager.GetValue(rNormal.Match(text).Groups["Type"].Value,item.ForcedAbsolute);
+            } 
             if (rNormalWithFormat.IsMatch(text))
             {
                 Match match = rNormalWithFormat.Match(text);
                 int dec = int.Parse(match.Groups["Decimal"].Value);
                 int length = int.Parse(match.Groups["Length"].Value);
                 string type = match.Groups["Type"].Value;
-                return GetValue(type, length, dec);
+                return dataManager.GetValue(type, length, dec, item.ForcedAbsolute);
             }
             if (rTiming.IsMatch(text))
             {
@@ -291,216 +292,12 @@ namespace DesktopInformation.DesktopObj
             {
                 return "??" + type;
             }
-            return ToSpecifiedLengthAndDec(result, length, dec);
-
-        }
-        /// <summary>
-        /// 获取值
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private string GetValue(string type)
-        {
-            return GetValue(type, 0, 0);
-        }
-        /// <summary>
-        /// 获取指定格式的值
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="length"></param>
-        /// <param name="dec"></param>
-        /// <returns></returns>
-        private string GetValue(string type, int length, int dec)
-        {
-            double result = double.NaN;
-            DateTime now = DateTime.Now;
-            switch (type)
+            if (item.ForcedAbsolute)
             {
-                case "Year":
-                    result = now.Year;
-                    break;
-                case "Month":
-                    result = now.Month;
-                    break;
-                case "Day":
-                    result = now.Day;
-                    break;
-                case "Hour":
-                    result = now.Hour;
-                    break;
-                case "Minute":
-                    result = now.Minute;
-                    break;
-                case "Second":
-                    result = now.Second;
-                    break;
-
-                case "TotalMemory":
-                    result = DeviceInfo.TotalMemory;
-                    break;
-                case "FreeMemory":
-                    result = DeviceInfo.FreeMemory;
-                    break;
-                case "UsedMemory":
-                    result = DeviceInfo.UsedMemory;
-                    break;
-                case "MemoryUsage":
-                    result = DeviceInfo.MemoryUsage;
-                    break;
-                case "ProcessCount":
-                    result = DeviceInfo.ProcessCount;
-                    break;
-                case "CpuUsage":
-                    result = DeviceInfo.CpuUsage;
-                    break;
-
-                case "DownloadSpeedKB":
-                    result = DeviceInfo.DownloadSpeedKB;
-                    break;
-                case "DownloadSpeedMB":
-                    result = DeviceInfo.DownloadSpeedMB;
-                    break;
-                case "UploadSpeedKB":
-                    result = DeviceInfo.UploadSpeedKB;
-                    break;
-                case "UploadSpeedMB":
-                    result = DeviceInfo.UploadSpeedMB;
-                    break;
-
-                case "Battery1Voltage":
-                    result = DeviceInfo.Battery1Voltage;
-                    break;
-                case "Battery2Voltage":
-                    result = DeviceInfo.Battery2Voltage;
-                    break;
-                case "Battery1Rate":
-                    result = DeviceInfo.Battery1Rate;
-                    break;
-                case "Battery2Rate":
-                    result = DeviceInfo.Battery2Rate;
-                    break;
-                case "BatteryPercent":
-                    result = DeviceInfo.BatteryPercent;
-                    break;
-                case "BatteryRemainHours":
-                    if(DeviceInfo.BatteryRemain.HasValue)
-                    {
-                        if(DeviceInfo.BatteryRemain.Value==TimeSpan.Zero)
-                        {
-                            return "∞";
-                        }
-                        result = DeviceInfo.BatteryRemain.Value.Hours;
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                    break;
-                case "BatteryRemainMinutes":
-                    if (DeviceInfo.BatteryRemain.HasValue)
-                    {
-                        if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
-                        {
-                            return "∞";
-                        }
-                        result = DeviceInfo.BatteryRemain.Value.Minutes;
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                    break;
-                case "BatteryRemainTotalHours":
-                    if (DeviceInfo.BatteryRemain.HasValue)
-                    {
-                        if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
-                        {
-                            return "∞";
-                        }
-                        result = DeviceInfo.BatteryRemain.Value.TotalHours;
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                    break;
-                case "BatteryRemainTotalMinutes":
-                    if (DeviceInfo.BatteryRemain.HasValue)
-                    {
-                        if (DeviceInfo.BatteryRemain.Value == TimeSpan.Zero)
-                        {
-                            return "∞";
-                        }
-                        result = DeviceInfo.BatteryRemain.Value.TotalMinutes;
-                    }
-                    else
-                    {
-                        return "";
-                    }
-                    break;
+                result = Math.Abs(result);
             }
+            return DataManager. ToSpecifiedLengthAndDec(result, length, dec);
 
-            if (!double.IsNaN(result))
-            {
-                if(item.ForcedAbsolute)
-                {
-                    result = Math.Abs(result);
-                }
-                return ToSpecifiedLengthAndDec(result, length, dec);
-            }
-            //string resultStr;
-            //List<double> infos;
-            //switch (type)
-            //{
-            //    case "BatteryVoltage":
-            //        infos = DeviceInfo.BatteryVoltage;
-            //        resultStr = ToSpecifiedLengthAndDec(infos[0], length, dec);
-            //        for (int i = 1; i < infos.Count; i++)
-            //        {
-            //            resultStr += set.Spliter + ToSpecifiedLengthAndDec(infos[i], length, dec);
-            //        }
-            //        return resultStr;
-            //    case "BatteryRate":
-            //        infos = DeviceInfo.BatteryRate;
-            //        resultStr = ToSpecifiedLengthAndDec(infos[0], length, dec);
-            //        for (int i = 1; i < infos.Count; i++)
-            //        {
-            //            resultStr += set.Spliter + ToSpecifiedLengthAndDec(infos[i], length, dec);
-            //        }
-            //        return resultStr;
-
-            //}
-            return "??" + type;
-        }
-        /// <summary>
-        /// 到指定精度和长度
-        /// </summary>
-        /// <param name="number"></param>
-        /// <param name="length"></param>
-        /// <param name="dec"></param>
-        /// <returns></returns>
-        private string ToSpecifiedLengthAndDec(double number, int length, int dec)
-        {
-
-            if (dec == 0 && length == 0)
-            {
-                return number.ToString();
-            }
-            if (dec == 0)
-            {
-                return string.Format("{0:" + GetRepeatedZero(length) + "}", number);
-            }
-            return string.Format("{0:" + GetRepeatedZero(length) + "." + GetRepeatedZero(dec) + "}", number);
-
-        }
-        /// <summary>
-        /// 获取一串指定重复次数的0
-        /// </summary>
-        /// <param name="length"></param>
-        /// <returns></returns>
-        private string GetRepeatedZero(int length)
-        {
-            return new string('0', length);
         }
 
         public override void UpdateDisplay()
@@ -511,11 +308,6 @@ namespace DesktopInformation.DesktopObj
             BorderThickness = new Thickness(item.BorderThickness);
         }
 
-
-        /// <summary>
-        /// 设备信息
-        /// </summary>
-        public override Tools.DeviceInfo DeviceInfo { get; set; }
 
     }
 }

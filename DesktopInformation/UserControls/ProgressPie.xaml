@@ -14,7 +14,7 @@
                      Maximum="1">
             <ProgressBar.Template>
                 <ControlTemplate TargetType="ProgressBar">
-                    <Border Background="{TemplateBinding Value, Converter={StaticResource ValueToProcessConverter}, ConverterParameter=150}"/>
+                    <Border Background="{TemplateBinding Value, Converter={StaticResource ValueToProcessConverter}, ConverterParameter=10}"/>
                 </ControlTemplate>
             </ProgressBar.Template>
         </ProgressBar>

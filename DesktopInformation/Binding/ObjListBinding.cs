@@ -1,6 +1,6 @@
 ﻿using System;
 using static DesktopInformation.Enums;
-using static DesktopInformation.Tools.Tools;
+using static DesktopInformation.Tool.Tools;
 
 namespace DesktopInformation.Binding
 {
@@ -22,6 +22,8 @@ namespace DesktopInformation.Binding
                 Height = 300;
                 Animation = true;
                 ForcedAbsolute = false;
+                Orientation = 0;
+                Reverse = false;
             }
         }
 
@@ -33,16 +35,18 @@ namespace DesktopInformation.Binding
                 Statue = Statue,
                 Name = Name.Clone() as string,
                 Value = Value.Clone() as string,
-                Left =Left,
-                Top=Top,
-                Width=Width,
-                Height=Height,
-                ForegroundColor=ForegroundColor.Clone() as string,
-                BackgounrdColor=BackgounrdColor.Clone() as string,
-                BorderColor=BorderColor.Clone() as string,
-                BorderThickness=BorderThickness,
-                ForcedAbsolute=ForcedAbsolute,
-                Animation=Animation,
+                Left = Left,
+                Top = Top,
+                Width = Width,
+                Height = Height,
+                ForegroundColor = ForegroundColor.Clone() as string,
+                BackgounrdColor = BackgounrdColor.Clone() as string,
+                BorderColor = BorderColor.Clone() as string,
+                BorderThickness = BorderThickness,
+                ForcedAbsolute = ForcedAbsolute,
+                Animation = Animation,
+                Orientation = Orientation,
+                Reverse = Reverse,
             };
         }
         
@@ -101,7 +105,8 @@ namespace DesktopInformation.Binding
         public bool ForcedAbsolute { get; set; } 
         public bool Animation { get; set; }
 
-
+        public int Orientation { get; set; }
+        public bool Reverse { get; set; }
     }
     
 }

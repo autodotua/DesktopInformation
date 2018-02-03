@@ -27,7 +27,11 @@ namespace DesktopInformation.UserControls
         }
         public void AnimationToValue(double value)
         {
-            Tools.Tools.NewDoubleAnimation(p, ProgressBar.ValueProperty, value, 0.5,0,null,false,new CubicEase() { EasingMode = EasingMode.EaseInOut });
+            Tool.Tools.NewDoubleAnimation(p, ProgressBar.ValueProperty, value, 0.5,0,null,false,new CubicEase() { EasingMode = EasingMode.EaseInOut });
+        }
+        public void ToValue(double value)
+        {
+            p.Value = value;
         }
         public new double BorderThickness
         {

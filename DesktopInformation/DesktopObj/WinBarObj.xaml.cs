@@ -20,10 +20,11 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinBarObj : WinPercentageDataTypeObjBase
     {
-        public WinBarObj(Binding.ObjListBinding item, Properties.Settings set, Tools.DeviceInfo deviceInfo) :base(item,set,deviceInfo)
+        public WinBarObj(Binding.ObjListBinding item, Properties.Settings set, Tool.DataManager dataManager) :base(item,set,dataManager)
         {
             InitializeComponent();
-            //UpdateDisplay();
+            bar.RenderTransformOrigin = new Point(0.5, 0.5);
+
         }
 
         public override void UpdateDisplay()
@@ -32,6 +33,15 @@ namespace DesktopInformation.DesktopObj
             bar.Background = ToBrush(item.BackgounrdColor);
             bar.BorderBrush = ToBrush(item.BorderColor);
             bar.BorderThickness = new Thickness(item.BorderThickness);
+            bar.Orientation = item.Orientation == 0 ? Orientation.Horizontal : Orientation.Vertical;
+            if (item.Reverse)
+            {
+                bar.RenderTransform = new RotateTransform(180);
+            }
+            else
+            {
+                bar.RenderTransform = null;
+            }
         }
 
         public override void Update()
@@ -40,7 +50,7 @@ namespace DesktopInformation.DesktopObj
             
             if (item.Animation)
             {
-                Tools.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5, 0, null, false, new CubicEase() { EasingMode = EasingMode.EaseInOut });
+                Tool.Tools.NewDoubleAnimation(bar, ProgressBar.ValueProperty, value / (max - min), 0.5, 0, null, false, new CubicEase() { EasingMode = EasingMode.EaseInOut });
             }
             else
             {

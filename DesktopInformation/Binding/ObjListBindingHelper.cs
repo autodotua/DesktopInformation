@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using static DesktopInformation.Tools.Tools;
+using static DesktopInformation.Tool.Tools;
 using static DesktopInformation.Properties.Resources;
 using static System.Environment;
 using static DesktopInformation.Enums;
@@ -66,11 +66,11 @@ namespace DesktopInformation.Binding
                     win.ShowDialog();
                     break;
                 case InfoType.Bar:
-                    win = new WinAddPercentageDataTypeObj(item);
+                    win = new WinAddBarObj(item);
                     win.ShowDialog();
                     break;
                 case InfoType.Pie:
-                    win = new WinAddPercentageDataTypeObj(item);
+                    win = new WinAddPieObj(item);
                     win.ShowDialog();
                     break;
             }
@@ -95,11 +95,11 @@ namespace DesktopInformation.Binding
                     win.ShowDialog();
                     break;
                 case InfoType.Bar:
-                    win = new WinAddPercentageDataTypeObj(item);
+                    win = new WinAddBarObj(item);
                     win.ShowDialog();
                     break;
                 case InfoType.Pie:
-                    win = new WinAddPercentageDataTypeObj(item);
+                    win = new WinAddPieObj(item);
                     win.ShowDialog();
                     break;
             }

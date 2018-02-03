@@ -19,7 +19,7 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinPieObj : WinPercentageDataTypeObjBase
     {
-        public WinPieObj(Binding.ObjListBinding item, Properties.Settings set, Tools.DeviceInfo deviceInfo) :base(item,set,deviceInfo)
+        public WinPieObj(Binding.ObjListBinding item, Properties.Settings set, Tool.DataManager dataManager) :base(item,set,dataManager)
         {
             InitializeComponent();
             //UpdateDisplay();
@@ -43,7 +43,7 @@ namespace DesktopInformation.DesktopObj
             }
             else
             {
-                //pie.Value = value / (max - min);
+                pie.ToValue(value / (max - min));
             }
         }
         

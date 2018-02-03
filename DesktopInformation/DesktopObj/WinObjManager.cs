@@ -1,5 +1,5 @@
 ﻿using DesktopInformation.Binding;
-using DesktopInformation.Tools;
+using DesktopInformation.Tool;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,17 @@ namespace DesktopInformation.DesktopObj
     public class WinObjManager
     {
         DispatcherTimer timer = new DispatcherTimer();
+        DataManager dataManager;
         Properties.Settings set;
+
+        public WinObjManager(Properties.Settings set)
+        {
+            this.set = set;
+            Aida64Linker aida64 = new Aida64Linker();
+            dataManager = new DataManager(set);
+        }
+
+
         public void Load(ObjListBinding[] list)
         {
             foreach (var i in list)
@@ -27,7 +37,7 @@ namespace DesktopInformation.DesktopObj
             timer.Interval = TimeSpan.FromSeconds(set.UpdateInterval);
             timer.Tick += (p1, p2) =>
             {
-                deviceInfo.Update();
+                dataManager.Update();
                 UpdateAll();
             };
             timer.Start();
@@ -71,11 +81,7 @@ namespace DesktopInformation.DesktopObj
 
         Dictionary<WinObjBase, ObjListBinding> wins = new Dictionary<WinObjBase, ObjListBinding>();
 
-        public WinObjManager(Properties.Settings set)
-        {
-            this.set = set;
-            deviceInfo = new DeviceInfo(set);
-        }
+
 
         public void AddWindow(ObjListBinding item)
         {
@@ -83,16 +89,16 @@ namespace DesktopInformation.DesktopObj
             switch (item.Type)
             {
                 case Text:
-                    win = new WinTextObj(item,set, deviceInfo);
+                    win = new WinTextObj(item,set,dataManager);
                     break;
                 case PlainText:
                     win = new WinPlainTextObj(item,set);
                     break;
                 case Bar:
-                    win = new WinBarObj(item,set, deviceInfo);
+                    win = new WinBarObj(item,set, dataManager);
                     break;
                 case Pie:
-                    win = new WinPieObj(item, set, deviceInfo);
+                    win = new WinPieObj(item, set, dataManager);
                     break;
             }
             if(item.Statue!=Enums.Statue.Stoped)
@@ -115,8 +121,6 @@ namespace DesktopInformation.DesktopObj
             }
             item.Statue = statue;
         }
-
-        DeviceInfo deviceInfo;
 
         public void RemoveWindow(ObjListBinding item)
         {

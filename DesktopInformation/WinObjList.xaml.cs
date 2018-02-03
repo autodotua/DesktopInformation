@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DesktopInformation.Binding;
 using DesktopInformation.DesktopObj;
-using static DesktopInformation.Tools.Tools;
+using static DesktopInformation.Tool.Tools;
 
 namespace DesktopInformation
 {
