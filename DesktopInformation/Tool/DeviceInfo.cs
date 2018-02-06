@@ -23,8 +23,16 @@ namespace DesktopInformation.Tool
             {
                 StringBuilder str = new StringBuilder("TotalMemory|MemoryUsage|FreeMemory|UsedMemory|ProcessCount|CpuUsage|" +
              "DownloadSpeedKB|DownloadSpeedMB|UploadSpeedKB|UploadSpeedMB|" +
-             "Battery1Voltage|Battery2Voltage|Battery1Rate|Battery2Rate|BatteryPercent|" +
+             "BatteryPercent|" +
              "BatteryRemainHours|BatteryRemainMinutes|BatteryRemainTotalHours|BatteryRemainTotalMinutes");
+                int index = 1;
+                foreach (var i in new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Battery").Get().Cast<ManagementObject>().ToArray())
+                {
+                    str.Append($"|Battery{index}Voltage");
+                    str.Append($"|Battery{index}Percent");
+                    str.Append($"|Battery{index}Rate");
+                    index++;
+                }
                 foreach (var i in Aida64Linker.GetSupportValueName())
                 {
                     str.Append("|AIDA64_" + i);
@@ -52,13 +60,16 @@ namespace DesktopInformation.Tool
         }
         PerformanceCounter cpuCounter;
         ManagementObjectSearcher systemInfoSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem");
+        ManagementObjectSearcher systemBatteryInfoSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Battery");
         ManagementObjectSearcher batteryInfoSearcher = new ManagementObjectSearcher("root\\WMI", "SELECT * FROM BatteryStatus");
         ManagementObject systemInfo;
+        ManagementObject[] systemBatteryInfo;
         ManagementObject[] batteryInfo;
         public void Update()
         {
             systemInfo = systemInfoSearcher.Get().Cast<ManagementObject>().ToArray()[0];
-            batteryInfo = batteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
+            systemBatteryInfo = systemBatteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
+            batteryInfo=batteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
             cpuUsage = 100-cpuCounter.NextValue();
 
         }
@@ -94,26 +105,47 @@ namespace DesktopInformation.Tool
         /// 进程数量
         /// </summary>
         public double ProcessCount => double.Parse(systemInfo["NumberOfProcesses"].ToString());
+
         /// <summary>
-        /// 电池1电压（V）
+        /// 电池电压（V）
         /// </summary>
-        public double Battery1Voltage => double.Parse(batteryInfo[0]["Voltage"].ToString()) / 1000;
+        public double GetBatteryVoltage(int index)
+        {
+            if (index > 0 && index <= batteryInfo.Count())
+            {
+                return double.Parse(systemBatteryInfo[index-1]["Voltage"].ToString()) / 1000;
+            }
+            return -1;
+        }
+
         /// <summary>
-        /// 电池2电压（V）
+        /// 电池功率（W，充电为正）
         /// </summary>
-        public double Battery2Voltage => double.Parse(batteryInfo[1]["Voltage"].ToString()) / 1000;
-        /// <summary>
-        /// 电池1功率（W，充电为正）
-        /// </summary>
-        public double Battery1Rate => (double.Parse(batteryInfo[0]["ChargeRate"].ToString())- double.Parse(batteryInfo[0]["DischargeRate"].ToString()) )/ 1000;
-        /// <summary>
-        /// 电池2功率（W，充电为正）
-        /// </summary>
-        public double Battery2Rate =>( double.Parse(batteryInfo[1]["ChargeRate"].ToString())- double.Parse(batteryInfo[1]["DischargeRate"].ToString())) / 1000;
+        public double GetBatteryRate(int index)
+        {
+            if (index > 0 && index <= batteryInfo.Count())
+            {
+                return (double.Parse(batteryInfo[index-1]["ChargeRate"].ToString()) - double.Parse(batteryInfo[index-1]["DischargeRate"].ToString())) / 1000;
+            }
+            return -1;
+        }
+
         /// <summary>
         /// 点亮百分比
         /// </summary>
-        public double BatteryPercent => Math.Round(PowerStatus.BatteryLifePercent * 100);
+        public double GetBatteryPercent(int index)
+        {
+            if (index == 0)
+            {
+                return Math.Round(PowerStatus.BatteryLifePercent * 100);
+            }
+            else if(index<=systemBatteryInfo.Count())
+            {
+               return double.Parse(systemBatteryInfo[index-1]["EstimatedChargeRemaining"].ToString());
+            }
+            return -1;
+        }
+
         /// <summary>
         /// 电池剩余时间，0为正在充电，null为未知
         /// </summary>

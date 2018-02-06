@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DesktopInformation.Tool;
 
@@ -113,20 +114,20 @@ namespace DesktopInformation.Tool
                         result = deviceInfo.UploadSpeedMB;
                         break;
 
-                    case "Battery1Voltage":
-                        result = deviceInfo.Battery1Voltage;
-                        break;
-                    case "Battery2Voltage":
-                        result = deviceInfo.Battery2Voltage;
-                        break;
-                    case "Battery1Rate":
-                        result = deviceInfo.Battery1Rate;
-                        break;
-                    case "Battery2Rate":
-                        result = deviceInfo.Battery2Rate;
-                        break;
+                    //case "Battery1Voltage":
+                    //    result = deviceInfo.GetBattery1Voltage();
+                    //    break;
+                    //case "Battery2Voltage":
+                    //    result = deviceInfo.Battery2Voltage;
+                    //    break;
+                    //case "Battery1Rate":
+                    //    result = deviceInfo.GetBattery1Rate();
+                    //    break;
+                    //case "Battery2Rate":
+                    //    result = deviceInfo.Battery2Rate;
+                    //    break;
                     case "BatteryPercent":
-                        result = deviceInfo.BatteryPercent;
+                        result = deviceInfo.GetBatteryPercent(0);
                         break;
                     case "BatteryRemainHours":
                         if (deviceInfo.BatteryRemain.HasValue)
@@ -186,8 +187,25 @@ namespace DesktopInformation.Tool
                         break;
                 }
             }
-          
-                if (!double.IsNaN(result))
+            if (double.IsNaN(result))
+            {
+                if (Regex.IsMatch(type, "^Battery[0-9]Voltage$"))
+                {
+                    int index = type.FirstOrDefault(p => p <= '9' && p >= '0') - '0';
+                    result = deviceInfo.GetBatteryVoltage(index);
+                }
+                if (Regex.IsMatch(type, "^Battery[0-9]Percent$"))
+                {
+                    int index = type.FirstOrDefault(p => p <= '9' && p >= '0') - '0';
+                    result = deviceInfo.GetBatteryPercent(index);
+                }
+                if (Regex.IsMatch(type, "^Battery[0-9]Rate$"))
+                {
+                    int index = type.FirstOrDefault(p => p <= '9' && p >= '0') - '0';
+                    result = deviceInfo.GetBatteryRate(index);
+                }
+            }
+            if (!double.IsNaN(result))
             {
                 if (abs)
                 {
