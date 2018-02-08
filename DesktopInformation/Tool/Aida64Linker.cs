@@ -3,20 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DesktopInformation.Tool
 {
     public class Aida64Linker
     {
-        RegistryKey rk = Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues");
+        RegistryKey rk;
 
-        public Aida64Linker()
+        public Aida64Linker(Action aidaOpened)
         {
-            supportValueName= rk.GetValueNames()
-                .Where(p=>p.Contains("Value."))
-                .Select(p => p = p.Replace("Value.", "")).ToArray();
-
+            Thread t = new Thread(() =>
+            {
+                bool aidaNotOpen = false;
+                while ((rk = Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues")) == null)
+                {
+                    aidaNotOpen = true;
+                    Thread.Sleep(2000);
+                }
+                supportValueName = rk.GetValueNames()
+             .Where(p => p.Contains("Value."))
+             .Select(p => p = p.Replace("Value.", "")).ToArray();
+                if(aidaNotOpen)
+                {
+                  aidaOpened();
+                }
+            });
+            t.Start();
         }
 
         public string[] SupportValueName => supportValueName;
@@ -25,6 +39,10 @@ namespace DesktopInformation.Tool
 
         public string GetValue(string key)
         {
+            if(rk==null)
+            {
+                return null;
+            }
             try
             {
                 return rk.GetValue("Value."+ key).ToString();
@@ -38,7 +56,7 @@ namespace DesktopInformation.Tool
 
         public static string[] GetSupportValueName()
         {
-            return
+            return Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues")==null?Array.Empty<string>():
             Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues").GetValueNames()
                 .Where(p => p.Contains("Value."))
                 .Select(p => p = p.Replace("Value.", "")).ToArray();

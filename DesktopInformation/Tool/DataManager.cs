@@ -248,11 +248,12 @@ namespace DesktopInformation.Tool
 
         DeviceInfo deviceInfo;
         Properties.Settings set;
-        Aida64Linker aida = new Aida64Linker();
+        Aida64Linker aida;
 
-        public DataManager(Properties.Settings set)
+        public DataManager(Properties.Settings set,Action aidaOpened)
         {
             this.set = set;
+            aida = new Aida64Linker(aidaOpened);
             deviceInfo = new DeviceInfo(set);
         }
 

@@ -131,7 +131,7 @@ namespace DesktopInformation.Tool
         }
 
         /// <summary>
-        /// 点亮百分比
+        /// 电量百分比
         /// </summary>
         public double GetBatteryPercent(int index)
         {

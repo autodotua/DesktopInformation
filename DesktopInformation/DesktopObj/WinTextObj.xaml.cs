@@ -31,6 +31,12 @@ namespace DesktopInformation.DesktopObj
             InitializeComponent();
 
 
+            
+
+        }
+        public Dictionary<string, DateTime> timer = new Dictionary<string, DateTime>();
+        public override void Load()
+        {
             normal = @"\{(?<Type>" + supportDateTime + "|" + SupportInfo + @")\}";
             Timing = @"\{(?<TimingName>[a-zA-Z0-9]+):(?<Type>" + supportTimeSpan + @")\}";
             NormalWithFormat = @"\{(?<Type>" + supportDateTime + "|" + SupportInfo + @"):(?<Length>[0-9]{1,2})\.(?<Decimal>[0-9])\}";
@@ -40,13 +46,11 @@ namespace DesktopInformation.DesktopObj
             rNormalWithFormat = new Regex(NormalWithFormat, RegexOptions.Compiled);
             rTimingWithFormat = new Regex(TimingWithFormat, RegexOptions.Compiled);
 
-        }
-        public Dictionary<string, DateTime> timer = new Dictionary<string, DateTime>();
-        public override void Load()
-        {
+
             string text = item.Value;
             UpdateDisplay();
             this.text = "";
+
             Regex rDate = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2})\}");
             Regex rDateTime = new Regex(@"\{(?<Name>[a-zA-Z0-9]+):(?<Year>\d{4}),(?<Month>\d{1,2}),(?<Day>\d{1,2}),(?<Hour>\d{1,2}),(?<Minute>\d{1,2}),(?<Second>\d{1,2})\}");
             timer.Clear();

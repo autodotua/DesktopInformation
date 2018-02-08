@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using static DesktopInformation.Enums.InfoType;
@@ -19,8 +20,7 @@ namespace DesktopInformation.DesktopObj
         public WinObjManager(Properties.Settings set)
         {
             this.set = set;
-            Aida64Linker aida64 = new Aida64Linker();
-            dataManager = new DataManager(set);
+            dataManager = new DataManager(set, () => RefreshAll());
         }
 
 
@@ -58,7 +58,14 @@ namespace DesktopInformation.DesktopObj
         {
             foreach (var i in wins)
             {
-                i.Key.Load();
+                if (Thread.CurrentThread.ManagedThreadId == i.Key.Dispatcher.Thread.ManagedThreadId)
+                {
+                    i.Key.Load();
+                }
+                else
+                {
+                    i.Key.Dispatcher.Invoke(() => i.Key.Load());
+                }
             }
         }
 

@@ -17,26 +17,15 @@ namespace DesktopInformation
     {
         private void ApplicationDispatcherUnhandledExceptionEventHandler(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            ShowAlert(e.Exception.Message);
+            ShowAlert(e.Exception.ToString());
             string logName = "UnhandledException.log";
-            if (File.Exists(logName))
-            {
-                string oldFile = File.ReadAllText(logName);
-                File.WriteAllText(logName,
-                oldFile
-                + Environment.NewLine + Environment.NewLine
-                + DateTime.Now.ToString()
+                File.AppendAllText(logName,
+                DateTime.Now.ToString()
                 + Environment.NewLine
-                + e.Exception.ToString());
-            }
-            else
-            {
-                File.WriteAllText(logName,
-                  DateTime.Now.ToString()
-                  + Environment.NewLine
-                   + e.Exception.ToString());
-            }
-            Current.Shutdown();
+                + e.Exception.ToString() 
+                +Environment.NewLine + Environment.NewLine);
+            Environment.Exit(0);
+            //Current.Shutdown();
             return;
         }
     }
