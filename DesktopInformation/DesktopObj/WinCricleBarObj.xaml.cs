@@ -18,9 +18,9 @@ namespace DesktopInformation.DesktopObj
     /// <summary>
     /// WinBarObj.xaml 的交互逻辑
     /// </summary>
-    public partial class WinBarObj : WinPercentageDataTypeObjBase
+    public partial class WinCricleBarObj : WinPercentageDataTypeObjBase
     {
-        public WinBarObj(Info.ObjInfo item, DataAnalysis.DataManager dataManager, bool adjust) :base(item,dataManager,adjust)
+        public WinCricleBarObj(Info.ObjInfo item, DataAnalysis.DataManager dataManager, bool adjust) :base(item,dataManager,  adjust)
         {
             InitializeComponent();
             bar.RenderTransformOrigin = new Point(0.5, 0.5);
@@ -32,6 +32,7 @@ namespace DesktopInformation.DesktopObj
             bar.Foreground = Item.Foreground;
             bar.Background = Item.Backgounrd;
             bar.BorderBrush = Item.BorderColor;
+            bar.InnerR = Item.InnerR;
             bar.BorderThickness = new Thickness(Item.BorderThickness);
             bar.Orientation = Item.Orientation == 0 ? Orientation.Horizontal : Orientation.Vertical;
             if (Item.Reverse)
@@ -50,7 +51,7 @@ namespace DesktopInformation.DesktopObj
             
             if (Item.Animation)
             {
-               NewDoubleAnimation(bar, ProgressBar.ValueProperty, (value-min) / (max - min), 0.5, 0, null, false, new CubicEase() { EasingMode = EasingMode.EaseInOut });
+              NewDoubleAnimation(bar, ProgressBar.ValueProperty, (value-min) / (max - min), 0.5, 0, null, false, new CubicEase() { EasingMode = EasingMode.EaseInOut });
             }
             else
             {

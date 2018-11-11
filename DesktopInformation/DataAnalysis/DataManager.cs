@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DesktopInformation.Tool;
+using DesktopInformation.DataAnalysis;
 
-namespace DesktopInformation.Tool
+namespace DesktopInformation.DataAnalysis
 {
    public class DataManager
     {
@@ -80,6 +80,9 @@ namespace DesktopInformation.Tool
                         break;
                     case "Second":
                         result = now.Second;
+                        break;
+                    case "Tick":
+                        result = now.Ticks;
                         break;
 
                     case "TotalMemory":
@@ -247,19 +250,22 @@ namespace DesktopInformation.Tool
         }
 
         DeviceInfo deviceInfo;
-        Properties.Settings set;
         Aida64Linker aida;
 
-        public DataManager(Properties.Settings set,Action aidaOpened)
+        public DataManager()
         {
-            this.set = set;
-            aida = new Aida64Linker(aidaOpened);
-            deviceInfo = new DeviceInfo(set);
+        }
+        public async Task Load()
+        {
+            aida = new Aida64Linker();
+            deviceInfo = new DeviceInfo();
+            await deviceInfo.Load();
         }
 
-        public void Update()
+
+        public bool Update()
         {
-            deviceInfo.Update();
+           return deviceInfo.Update();
         }
     }
 }

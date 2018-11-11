@@ -59,8 +59,6 @@ namespace DesktopInformation.UserControls
 
         }
 
-        public Properties.Settings set;
-
         public string Text { get => tbk1.Text; set => tbk1.Text = value; }
 
 

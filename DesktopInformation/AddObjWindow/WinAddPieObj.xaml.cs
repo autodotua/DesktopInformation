@@ -23,7 +23,7 @@ namespace DesktopInformation.AddObjWindow
     {
         string[] supportList = DeviceInfo.SupportInfo.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
 
-        public WinAddPieObj(Binding.ObjListBinding item):base(item)
+        public WinAddPieObj(Info.ObjListBInfo item):base(item)
         {
             InitializeComponent();
             txtName.Text = item.Name;
@@ -48,7 +48,7 @@ namespace DesktopInformation.AddObjWindow
         private string Check()
         {
             string min = txtMin.Text;
-            string value = txtValue.Text;
+            string value = cbbValue.SelectedItem as string;
             string max = txtMax.Text;
             if ((!double.TryParse(min, out double dMin)) && (!supportList.Contains(min)))
             {

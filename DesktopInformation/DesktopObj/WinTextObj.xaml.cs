@@ -1,22 +1,14 @@
-﻿using System;
+﻿using DesktopInformation.DataAnalysis;
+using FzLib.Control.Dialog;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using DesktopInformation.Properties;
-using static DesktopInformation.Tool.Tools;
-using static DesktopInformation.Tool.DeviceInfo;
-using DesktopInformation.Tool;
+using System.Windows.Media.Effects;
+using static DesktopInformation.DataAnalysis.DeviceInfo;
 
 namespace DesktopInformation.DesktopObj
 {
@@ -25,13 +17,13 @@ namespace DesktopInformation.DesktopObj
     /// </summary>
     public partial class WinTextObj : WinObjBase
     {
-        public WinTextObj(Binding.ObjListBinding item, Settings set,DataManager dataManager) : base(item,set,dataManager)
+        public WinTextObj(Info.ObjInfo item, DataManager dataManager,bool adjust) : base(item, dataManager,adjust)
         {
-            
+
             InitializeComponent();
 
 
-            
+
 
         }
         public Dictionary<string, DateTime> timer = new Dictionary<string, DateTime>();
@@ -47,7 +39,7 @@ namespace DesktopInformation.DesktopObj
             rTimingWithFormat = new Regex(TimingWithFormat, RegexOptions.Compiled);
 
 
-            string text = item.Value;
+            string text = Item.Value;
             UpdateDisplay();
             this.text = "";
 
@@ -56,13 +48,13 @@ namespace DesktopInformation.DesktopObj
             timer.Clear();
             foreach (var i in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
-                
+
                 if (rDate.IsMatch(i))
                 {
                     Match match = rDate.Match(i);
                     if (timer.ContainsKey(match.Groups["Name"].Value))
                     {
-                        ShowAlert("存在相同的计时名：" + match.Groups["Name"].Value + "！请立即更改。");
+                        DialogHelper.ShowError("存在相同的计时名：" + match.Groups["Name"].Value + "！请立即更改。");
                         continue;
                     }
                     try
@@ -71,7 +63,7 @@ namespace DesktopInformation.DesktopObj
                     }
                     catch (ArgumentOutOfRangeException)
                     {
-                        ShowAlert("“" + match.Groups["Name"].Value + "”的日期不合法！");
+                        DialogHelper.ShowError("“" + match.Groups["Name"].Value + "”的日期不合法！");
                         return;
                     }
                 }
@@ -80,7 +72,7 @@ namespace DesktopInformation.DesktopObj
                     Match match = rDateTime.Match(i);
                     if (timer.ContainsKey(match.Groups["Name"].Value))
                     {
-                        ShowAlert("存在相同的计时名：" + match.Groups["Name"].Value + "！请立即更改。");
+                        DialogHelper.ShowError("存在相同的计时名：" + match.Groups["Name"].Value + "！请更改。");
                         continue;
                     }
                     try
@@ -93,9 +85,9 @@ namespace DesktopInformation.DesktopObj
                                   int.Parse(match.Groups["Second"].Value)
                             ));
                     }
-                    catch (ArgumentOutOfRangeException )
+                    catch (ArgumentOutOfRangeException)
                     {
-                        ShowAlert("“" + match.Groups["Name"].Value + "”的日期不合法！");
+                        DialogHelper.ShowError("“" + match.Groups["Name"].Value + "”的日期不合法！");
                         return;
                     }
                 }
@@ -138,7 +130,7 @@ namespace DesktopInformation.DesktopObj
         /// <param name="text"></param>
         public void UpdateText(string text)
         {
-            if(item.Animation)
+            if (Item.Animation)
             {
                 tbkAni.ChangeText(text);
                 tbk.Text = "";
@@ -203,15 +195,15 @@ namespace DesktopInformation.DesktopObj
         {
             if (rNormal.IsMatch(text))
             {
-                return dataManager.GetValue(rNormal.Match(text).Groups["Type"].Value,item.ForcedAbsolute);
-            } 
+                return dataManager.GetValue(rNormal.Match(text).Groups["Type"].Value, Item.Absolute);
+            }
             if (rNormalWithFormat.IsMatch(text))
             {
                 Match match = rNormalWithFormat.Match(text);
                 int dec = int.Parse(match.Groups["Decimal"].Value);
                 int length = int.Parse(match.Groups["Length"].Value);
                 string type = match.Groups["Type"].Value;
-                return dataManager.GetValue(type, length, dec, item.ForcedAbsolute);
+                return dataManager.GetValue(type, length, dec, Item.Absolute);
             }
             if (rTiming.IsMatch(text))
             {
@@ -225,7 +217,7 @@ namespace DesktopInformation.DesktopObj
                 int dec = int.Parse(match.Groups["Decimal"].Value);
                 int length = int.Parse(match.Groups["Length"].Value);
                 string type = match.Groups["Type"].Value;
-                return GetValue(name,type, length, dec);
+                return GetValue(name, type, length, dec);
             }
             return text;
         }
@@ -296,20 +288,30 @@ namespace DesktopInformation.DesktopObj
             {
                 return "??" + type;
             }
-            if (item.ForcedAbsolute)
+            if (Item.Absolute)
             {
                 result = Math.Abs(result);
             }
-            return DataManager. ToSpecifiedLengthAndDec(result, length, dec);
+            return DataManager.ToSpecifiedLengthAndDec(result, length, dec);
 
         }
 
         public override void UpdateDisplay()
         {
-            tbk.Background = ToBrush(item.BackgounrdColor);
-            tbk.Foreground = tbkAni.Foreground = ToBrush(item.ForegroundColor);
-            BorderBrush = ToBrush(item.BorderColor);
-            BorderThickness = new Thickness(item.BorderThickness);
+            tbk.Background = Item.Backgounrd;
+            tbk.Foreground = tbkAni.Foreground = Item.Foreground;
+            BorderBrush = Item.BorderColor;
+            BorderThickness = new Thickness(Item.BorderThickness);
+            if(Item.ShadowColor!=Colors.Transparent)
+            {
+                grd.Effect = new DropShadowEffect()
+                {
+                    Color = Item.ShadowColor,
+                    BlurRadius = Item.ShadowBlurRadius,
+                    ShadowDepth = Item.ShadowDepth,
+                    Direction = Item.ShadowDirection,
+                };
+            }
         }
 
 

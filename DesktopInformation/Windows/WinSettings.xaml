@@ -1,11 +1,11 @@
-﻿<Window x:Class="DesktopInformation.WinSettings"
+﻿<Window x:Class="DesktopInformation.Windows.WinSettings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DesktopInformation"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
+        xmlns:flat="clr-namespace:FzLib.Control.FlatStyle;assembly=FzWpfControlLib"
+        WindowStartupLocation="CenterOwner"
         Title="设置" SizeToContent="WidthAndHeight">
     <Grid Margin="4">
         <Grid.RowDefinitions>
@@ -20,16 +20,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="8"/>
-            <ColumnDefinition Width="64"/>
+            <ColumnDefinition Width="128"/>
         </Grid.ColumnDefinitions>
-        <CheckBox x:Name="chkHide" Content="打开程序自动后台" Grid.ColumnSpan="3"/>
-        <CheckBox x:Name="chkStartup" Grid.Row="2" Content="开机启动"  Grid.ColumnSpan="3"/>
-        <StackPanel Orientation="Horizontal"   Grid.Row="4">
-            <TextBlock Text="刷新间隔：" />
-            <TextBlock x:Name="tbkSldValue"/>
-            <TextBlock Text="秒" />
-        </StackPanel>
-        <Slider x:Name="sldUpdate" Minimum="1" Maximum="60" Grid.Row="4" Grid.Column="2" SmallChange="1" ValueChanged="SldUpdateValueChangedEventHandler"/>
-        <Button Content="保存" Grid.ColumnSpan="3" Grid.Row="6" Click="BtnSaveClickEventHandler"/>
+        <flat:CheckBox Click="chkStartup_Click" x:Name="chkStartup" Grid.Row="2" Content="开机启动"  Grid.ColumnSpan="3"/>
+            <TextBlock Text="刷新间隔："  Grid.Row="4"/>
+        <flat:HorizontalSlider x:Name="sldUpdate" Minimum="1" Maximum="60" Grid.Row="4" Grid.Column="2" SmallChange="1" />
+        <flat:Button Content="保存" Grid.ColumnSpan="3" Grid.Row="6" Click="BtnSaveClickEventHandler"/>
     </Grid>
 </Window>

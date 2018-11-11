@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using static System.Windows.Forms.SystemInformation;
 
-namespace DesktopInformation.Tool
+namespace DesktopInformation.DataAnalysis
 {
     public class DeviceInfo
     {
@@ -22,9 +18,9 @@ namespace DesktopInformation.Tool
             get
             {
                 StringBuilder str = new StringBuilder("TotalMemory|MemoryUsage|FreeMemory|UsedMemory|ProcessCount|CpuUsage|" +
-             "DownloadSpeedKB|DownloadSpeedMB|UploadSpeedKB|UploadSpeedMB|" +
              "BatteryPercent|" +
-             "BatteryRemainHours|BatteryRemainMinutes|BatteryRemainTotalHours|BatteryRemainTotalMinutes");
+             "BatteryRemainHours|BatteryRemainMinutes|BatteryRemainTotalHours|BatteryRemainTotalMinutes"
+             + (Config.Instance.DisableNetwork ? "" : "|DownloadSpeedKB|DownloadSpeedMB|UploadSpeedKB|UploadSpeedMB"));
                 int index = 1;
                 foreach (var i in new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Battery").Get().Cast<ManagementObject>().ToArray())
                 {
@@ -42,21 +38,29 @@ namespace DesktopInformation.Tool
         }
         private NetworkMonitor monitor;
         NetworkAdapter adapter = null;
-        Properties.Settings set;
-        public DeviceInfo(Properties.Settings set)
+        public DeviceInfo()
         {
-            this.set = set;
-            monitor = new NetworkMonitor();
-            var adapters = monitor.Adapters.Where(p => p.Name == set.NetworkAdapter);
-            if (adapters.Count() > 0)
+           
+        }
+        public async Task Load()
+        {
+          await  Task.Run(() =>
             {
-                adapter = adapters.ToArray()[0];
-                monitor.StartMonitoring();
-            }
-            cpuCounter = new PerformanceCounter("Processor", "% Idle Time", "_Total");
-            cpuCounter.NextValue();
-            // computer.Open();
-            Update();
+                //if (!Config.Instance.DisableNetwork)
+                //{
+                monitor = new NetworkMonitor();
+                var adapters = monitor.Adapters.Where(p => p.Name == Config.Instance.NetworkAdapter);
+                if (adapters.Count() > 0)
+                {
+                    adapter = adapters.ToArray()[0];
+                    monitor.StartMonitoring();
+                }
+                //}
+                cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+                cpuCounter.NextValue();
+                // computer.Open();
+                Update();
+            });
         }
         PerformanceCounter cpuCounter;
         ManagementObjectSearcher systemInfoSearcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem");
@@ -65,13 +69,20 @@ namespace DesktopInformation.Tool
         ManagementObject systemInfo;
         ManagementObject[] systemBatteryInfo;
         ManagementObject[] batteryInfo;
-        public void Update()
+        public bool Update()
         {
-            systemInfo = systemInfoSearcher.Get().Cast<ManagementObject>().ToArray()[0];
-            systemBatteryInfo = systemBatteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
-            batteryInfo=batteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
-            cpuUsage = 100-cpuCounter.NextValue();
-
+            try
+            {
+                systemInfo = systemInfoSearcher.Get().Cast<ManagementObject>().ToArray()[0];
+                systemBatteryInfo = systemBatteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
+                batteryInfo = batteryInfoSearcher.Get().Cast<ManagementObject>().ToArray();
+                cpuUsage = cpuCounter.NextValue();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
         }
         //[DllImport("kernel32.dll")]
         //[return: MarshalAs(UnmanagedType.Bool)]
@@ -100,7 +111,7 @@ namespace DesktopInformation.Tool
         /// <summary>
         /// 内存使用率（%）
         /// </summary>
-        public double MemoryUsage => UsedMemory / TotalMemory*100;
+        public double MemoryUsage => UsedMemory / TotalMemory * 100;
         /// <summary>
         /// 进程数量
         /// </summary>
@@ -113,7 +124,7 @@ namespace DesktopInformation.Tool
         {
             if (index > 0 && index <= batteryInfo.Count())
             {
-                return double.Parse(systemBatteryInfo[index-1]["Voltage"].ToString()) / 1000;
+                return double.Parse(systemBatteryInfo[index - 1]["Voltage"].ToString()) / 1000;
             }
             return -1;
         }
@@ -125,7 +136,7 @@ namespace DesktopInformation.Tool
         {
             if (index > 0 && index <= batteryInfo.Count())
             {
-                return (double.Parse(batteryInfo[index-1]["ChargeRate"].ToString()) - double.Parse(batteryInfo[index-1]["DischargeRate"].ToString())) / 1000;
+                return (double.Parse(batteryInfo[index - 1]["ChargeRate"].ToString()) - double.Parse(batteryInfo[index - 1]["DischargeRate"].ToString())) / 1000;
             }
             return -1;
         }
@@ -139,9 +150,9 @@ namespace DesktopInformation.Tool
             {
                 return Math.Round(PowerStatus.BatteryLifePercent * 100);
             }
-            else if(index<=systemBatteryInfo.Count())
+            else if (index <= systemBatteryInfo.Count())
             {
-               return double.Parse(systemBatteryInfo[index-1]["EstimatedChargeRemaining"].ToString());
+                return double.Parse(systemBatteryInfo[index - 1]["EstimatedChargeRemaining"].ToString());
             }
             return -1;
         }

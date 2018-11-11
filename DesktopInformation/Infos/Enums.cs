@@ -9,7 +9,7 @@ namespace DesktopInformation
     public static class Enums
     {
         [Serializable]
-        public enum InfoType
+        public enum ObjType
         {
             PlainText,
             Text,
@@ -17,7 +17,7 @@ namespace DesktopInformation
             Pie
         }
         [Serializable]
-        public enum Statue
+        public enum Status
         {
            Running,
            Pausing,

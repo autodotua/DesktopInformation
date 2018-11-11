@@ -9,16 +9,15 @@ namespace DesktopInformation.AddObjWindow
 {
     public class WinAddObjBase:System.Windows.Window
     {
-        public Binding.ObjListBinding item;
-        public WinAddObjBase(Binding.ObjListBinding item)
+        public Info.ObjInfo item;
+        public WinAddObjBase(Info.ObjInfo item)
         {
             this.item = item;
         }
-
-        protected bool IsColor(string color)
-        {
-            Regex r = new Regex("^#[0-9A-F]{8}$");
-            return r.IsMatch(color);
-        }
+        //protected bool IsColor(string color)
+        //{
+        //    Regex r = new Regex("^#[0-9A-F]{8}$");
+        //    return r.IsMatch(color);
+        //}
     }
 }

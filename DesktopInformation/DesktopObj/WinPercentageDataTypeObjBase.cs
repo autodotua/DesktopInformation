@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DesktopInformation.Tool;
+using DesktopInformation.DataAnalysis;
 
 namespace DesktopInformation.DesktopObj
 {
     public abstract class WinPercentageDataTypeObjBase:WinObjBase
     {
-        public WinPercentageDataTypeObjBase(Binding.ObjListBinding item, Properties.Settings set, DataManager dataManager) : base(item, set,dataManager)
+        public WinPercentageDataTypeObjBase(Info.ObjInfo item,DataManager dataManager, bool adjust) : base(item,dataManager,adjust)
         {
 
         }
@@ -23,7 +23,7 @@ namespace DesktopInformation.DesktopObj
         protected double max;
         public override void Load()
         {
-            string[] temp = item.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] temp = Item.Value.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
             if(double.TryParse(temp[0],out min))
             {
                 strMin = null;

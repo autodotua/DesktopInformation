@@ -1,13 +1,12 @@
-﻿using DesktopInformation.Binding;
-using DesktopInformation.Tool;
+﻿using DesktopInformation.DataAnalysis;
+using DesktopInformation.Info;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
-using static DesktopInformation.Enums.InfoType;
+using static DesktopInformation.Enums.ObjType;
 
 namespace DesktopInformation.DesktopObj
 {
@@ -15,121 +14,148 @@ namespace DesktopInformation.DesktopObj
     {
         DispatcherTimer timer = new DispatcherTimer();
         DataManager dataManager;
-        Properties.Settings set;
 
-        public WinObjManager(Properties.Settings set)
+        public WinObjManager()
         {
-            this.set = set;
-            dataManager = new DataManager(set, () => RefreshAll());
+            dataManager = new DataManager();
         }
 
 
-        public void Load(ObjListBinding[] list)
+        public async Task Load()
         {
-            foreach (var i in list)
-            {
-                if (i.Statue != Enums.Statue.Stoped)
-                {
-                    AddWindow(i);
-                }
-            }
+            await RefreshWindows();
             UpdateAll();
-            timer.Interval = TimeSpan.FromSeconds(set.UpdateInterval);
+            timer.Interval = TimeSpan.FromSeconds(Config.Instance.UpdateInterval);
             timer.Tick += (p1, p2) =>
             {
-                dataManager.Update();
-                UpdateAll();
+                if (dataManager.Update())
+                {
+                    UpdateAll();
+                }
             };
             timer.Start();
-        }
 
+        }
+        private bool isBusy = false;
         public void UpdateAll()
         {
+            if (isBusy)
+            {
+                return;
+            }
             foreach (var i in wins)
             {
-                if (i.Value.Statue == Enums.Statue.Running && i.Value.Type != PlainText)
+                if (i.Value.Status == Enums.Status.Running && i.Value.Type != PlainText)
                 {
-                    i.Key.Update();
+                    try
+                    {
+                        i.Key.Update();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
             }
         }
 
-        public void RefreshAll()
-        {
-            foreach (var i in wins)
-            {
-                if (Thread.CurrentThread.ManagedThreadId == i.Key.Dispatcher.Thread.ManagedThreadId)
-                {
-                    i.Key.Load();
-                }
-                else
-                {
-                    i.Key.Dispatcher.Invoke(() => i.Key.Load());
-                }
-            }
-        }
 
-        public void Adjust(ObjListBinding item)
+        public void Adjust(ObjInfo item)
         {
-          //  if (wins.ContainsValue(item))
-          //  {
-                WinObjBase win = wins.FirstOrDefault(p => p.Value == item).Key;
-                win.Adjuest = !win.Adjuest;
-           // }
+            //  if (wins.ContainsValue(item))
+            //  {
+            isBusy = true;
+            WinObjBase win = wins.First(p => p.Value == item).Key;
+            var adjusting = win.Adjuesting;
+            win.Close();
+            wins.Remove(win);
+            AddWindow(item, !adjusting);
+            isBusy = false;
+            // }
         }
 
         public void Adjust()
         {
-            foreach (var i in wins)
+            foreach (var item in wins.Values.ToArray())
             {
-                i.Key.Adjuest = !i.Key.Adjuest;
+                Adjust(item);
             }
+
         }
 
-        Dictionary<WinObjBase, ObjListBinding> wins = new Dictionary<WinObjBase, ObjListBinding>();
-
-
-
-        public void AddWindow(ObjListBinding item)
+        public void RefreshWindow(ObjInfo item)
         {
-            WinObjBase win=null;
+            isBusy = true;
+            WinObjBase win = wins.First(p => p.Value == item).Key;
+            win.Close();
+            wins.Remove(win);
+            AddWindow(item, false);
+            isBusy = false;
+        }
+        public async Task RefreshWindows()
+        {
+            isBusy = true;
+            await dataManager.Load();
+            foreach (var win in wins)
+            {
+                win.Key.Close();
+            }
+            wins.Clear();
+            foreach (var i in Config.Instance.Objs)
+            {
+                if (i.Status != Enums.Status.Stoped)
+                {
+                    AddWindow(i, false);
+                    await Task.Delay(200);
+                }
+            }
+            isBusy = false;
+        }
+        Dictionary<WinObjBase, ObjInfo> wins = new Dictionary<WinObjBase, ObjInfo>();
+
+
+
+        public Window AddWindow(ObjInfo item, bool adjust)
+        {
+            WinObjBase win = null;
             switch (item.Type)
             {
                 case Text:
-                    win = new WinTextObj(item,set,dataManager);
+                    win = new WinTextObj(item, dataManager, adjust);
                     break;
                 case PlainText:
-                    win = new WinPlainTextObj(item,set);
+                    win = new WinPlainTextObj(item, adjust);
                     break;
                 case Bar:
-                    win = new WinBarObj(item,set, dataManager);
+                    win = new WinBarObj(item, dataManager, adjust);
                     break;
                 case Pie:
-                    win = new WinPieObj(item, set, dataManager);
+                    win = new WinCricleBarObj(item, dataManager, adjust);
                     break;
             }
-            if(item.Statue!=Enums.Statue.Stoped)
+            if (item.Status != Enums.Status.Stoped)
             {
                 win.Load();
                 wins.Add(win, item);
                 win.Show();
             }
+            return win;
         }
 
-        public void SetStatue(ObjListBinding item, Enums.Statue statue)
+        public void SetStatue(ObjInfo item, Enums.Status statue)
         {
-            if (wins.ContainsValue(item) && statue == Enums.Statue.Stoped)
+            if (wins.ContainsValue(item) && statue == Enums.Status.Stoped)
             {
                 RemoveWindow(item);
             }
-            else if((!wins.ContainsValue(item)) && statue != Enums.Statue.Stoped)
+            else if ((!wins.ContainsValue(item)) && statue != Enums.Status.Stoped)
             {
-                AddWindow(item);
+                AddWindow(item, false);
             }
-            item.Statue = statue;
+            item.Status = statue;
         }
 
-        public void RemoveWindow(ObjListBinding item)
+        public void RemoveWindow(ObjInfo item)
         {
             if (wins.ContainsValue(item))
             {
@@ -142,7 +168,7 @@ namespace DesktopInformation.DesktopObj
         public void ResetTimerInterval()
         {
             timer.Stop();
-            timer.Interval = TimeSpan.FromSeconds(set.UpdateInterval);
+            timer.Interval = TimeSpan.FromSeconds(Config.Instance.UpdateInterval);
             timer.Start();
 
         }

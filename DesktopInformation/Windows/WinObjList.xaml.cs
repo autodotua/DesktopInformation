@@ -1,84 +1,28 @@
-﻿using System;
+﻿using DesktopInformation.Info;
+using DesktopInformation.DataAnalysis;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using DesktopInformation.Binding;
-using DesktopInformation.DesktopObj;
-using static DesktopInformation.Tool.Tools;
 
-namespace DesktopInformation
+namespace DesktopInformation.Windows
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class WinObjList : Window
     {
-        private System.Windows.Forms.NotifyIcon notifyIcon = null;
-        private ObjListBindingHelper helper;
-        private WinObjManager manager;
-        private Properties.Settings set;
+        private ObjListInfoHelper helper;
         public WinObjList()
         {
             InitializeComponent();
 
-            set = new Properties.Settings();
-            manager = new WinObjManager(set);
-            helper = new ObjListBindingHelper(lvw, manager, set);
-
-            Visibility = set.AutoHide ? Visibility.Hidden : Visibility.Visible;
-
-
-            InitialTray();
-        }
-        /// <summary>
-        /// 初始化托盘
-        /// </summary>
-        private void InitialTray()
-        {
-
-            notifyIcon = new System.Windows.Forms.NotifyIcon
-            {
-                BalloonTipText = "设置界面在任务栏托盘",
-                Text = "桌面信息员",
-                Icon = Properties.Resources.icon,
-                Visible = true
-            };
-            if (!File.Exists(Properties.Resources.ObjListFileName))
-            {
-                notifyIcon.ShowBalloonTip(2000);
-            }
-            notifyIcon.MouseClick += (p1, p2) =>
-            {
-                if (p2.Button == System.Windows.Forms.MouseButtons.Left)
-                {
-                    if (Visibility == Visibility.Hidden)
-                    {
-                        Visibility = Visibility.Visible;
-                        Activate();
-                    }
-                    else
-                    {
-                        Visibility = Visibility.Hidden;
-                    }
-                }
-                else if (p2.Button == System.Windows.Forms.MouseButtons.Right)
-                {
-                    ShowNotifyIconMenu(p1);
-                }
-            };
+            helper = new ObjListInfoHelper();
+            lvw.ItemsSource = Config.Instance.Objs;
 
         }
+
         /// <summary>
         /// 显示托盘图标菜单
         /// </summary>
@@ -92,7 +36,7 @@ namespace DesktopInformation
             {
                 if (Visibility == Visibility.Visible)
                 {
-                    helper.SaveConfig();
+                    Config.Instance.Save();
                 }
                 Application.Current.Shutdown();
             };
@@ -121,38 +65,38 @@ namespace DesktopInformation
         private void BtnAddClickEventHandler(object sender, RoutedEventArgs e)
         {
 
-            MenuItem menuText = new MenuItem() { Header = "文本" };
-            menuText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Text);
-            MenuItem menuPlainText = new MenuItem() { Header = "纯文本" };
-            menuPlainText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.PlainText);
-            MenuItem menuBar = new MenuItem() { Header = "直条" };
-            menuBar.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Bar);
-            MenuItem menuPie = new MenuItem() { Header = "饼图" };
-            menuPie.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Pie);
-            MenuItem menuClone = new MenuItem() { Header = "建立副本" };
-            menuClone.Click += (p1, p2) =>
-              {
-                  foreach (var i in lvw.SelectedItems)
-                  {
-                      helper.Clone(i as ObjListBinding);
-                  }
-              };
-            ContextMenu menu = new ContextMenu()
-            {
-                IsOpen = true,
-                PlacementTarget = sender as UIElement,
-                Items =
-                {
-                    menuText,
-                   menuPlainText,
-                   menuBar,
-                   menuPie,
-                }
-            };
-            if(lvw.SelectedIndex!=-1)
-            {
-                menu.Items.Add(menuClone);
-            }
+            //MenuItem menuText = new MenuItem() { Header = "文本" };
+            //menuText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Text);
+            //MenuItem menuPlainText = new MenuItem() { Header = "纯文本" };
+            //menuPlainText.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.PlainText);
+            //MenuItem menuBar = new MenuItem() { Header = "直条" };
+            //menuBar.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Bar);
+            //MenuItem menuPie = new MenuItem() { Header = "饼图" };
+            //menuPie.Click += (p1, p2) => helper.OpenEditWindow(Enums.InfoType.Pie);
+            //MenuItem menuClone = new MenuItem() { Header = "建立副本" };
+            //menuClone.Click += (p1, p2) =>
+            //  {
+            //      foreach (var i in lvw.SelectedItems)
+            //      {
+            //          helper.Clone(i as ObjListBInfo);
+            //      }
+            //  };
+            //ContextMenu menu = new ContextMenu()
+            //{
+            //    IsOpen = true,
+            //    PlacementTarget = sender as UIElement,
+            //    Items =
+            //    {
+            //        menuText,
+            //       menuPlainText,
+            //       menuBar,
+            //       menuPie,
+            //    }
+            //};
+            //if(lvw.SelectedIndex!=-1)
+            //{
+            //    menu.Items.Add(menuClone);
+            //}
         }
         /// <summary>
         /// 窗体关闭事件
@@ -161,9 +105,7 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void WindowClosingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            helper.SaveConfig();
-            Visibility = Visibility.Hidden;
-            e.Cancel = true;
+            Config.Instance.Save();
         }
         /// <summary>
         /// 单击编辑按钮事件
@@ -172,8 +114,11 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void BtnEditClickEventHandler(object sender, RoutedEventArgs e)
         {
-            helper.OpenEditWindow(lvw.SelectedItem as ObjListBinding);
+            if (lvw.SelectedItem != null)
+            {
+                helper.OpenEditWindow(lvw.SelectedItem as ObjInfo);
 
+            }
         }
         /// <summary>
         /// 双击列表项事件
@@ -195,12 +140,12 @@ namespace DesktopInformation
             {
                 foreach (var i in lvw.SelectedItems)
                 {
-                    manager.Adjust(i as ObjListBinding);
+                    App.Instance.Manager.Adjust(i as ObjInfo);
                 }
             }
             else
             {
-                manager.Adjust();
+                App.Instance.Manager.Adjust();
             }
         }
         /// <summary>
@@ -210,8 +155,8 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void LvwSelectionChangedEventHandler(object sender, SelectionChangedEventArgs e)
         {
-            btnEdit.IsEnabled  = btnChangeStatues.IsEnabled = btnDelete.IsEnabled = (lvw.SelectedIndex >= 0);
-            if ((lvw.SelectedItem as ObjListBinding)?.Statue == Enums.Statue.Stoped)
+            btnEdit.IsEnabled = btnChangeStatues.IsEnabled = btnDelete.IsEnabled = (lvw.SelectedIndex >= 0);
+            if ((lvw.SelectedItem as ObjInfo)?.Status == Enums.Status.Stoped)
             {
                 btnEdit.IsEnabled = false;
             }
@@ -248,10 +193,10 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void BtnDeleteClickEventHandler(object sender, RoutedEventArgs e)
         {
-            var selectedItems = lvw.SelectedItems.Cast<ObjListBinding>().ToArray();
+            var selectedItems = lvw.SelectedItems.Cast<ObjInfo>().ToArray();
             foreach (var i in selectedItems)
             {
-                manager.RemoveWindow(i);
+                App.Instance.Manager.RemoveWindow(i);
                 helper.RemoveItem(i);
             }
         }
@@ -262,13 +207,13 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void BtnSetStatuesClickEventHandler(object sender, RoutedEventArgs e)
         {
-            IEnumerable<ObjListBinding> items = lvw.SelectedItems.Cast<ObjListBinding>();
+            IEnumerable<ObjInfo> items = lvw.SelectedItems.Cast<ObjInfo>();
             MenuItem menuRunning = new MenuItem() { Header = "运行" };
-            menuRunning.Click += (p1, p2) => helper.SetStatues(items,Enums.Statue.Running);
-            MenuItem menuPausing= new MenuItem() { Header = "暂停" };
-            menuPausing.Click += (p1, p2) => helper.SetStatues(items, Enums.Statue.Pausing);
+            menuRunning.Click += (p1, p2) => helper.SetStatues(items, Enums.Status.Running);
+            MenuItem menuPausing = new MenuItem() { Header = "暂停" };
+            menuPausing.Click += (p1, p2) => helper.SetStatues(items, Enums.Status.Pausing);
             MenuItem menuStopped = new MenuItem() { Header = "停止" };
-            menuStopped.Click += (p1, p2) => helper.SetStatues(items, Enums.Statue.Stoped);
+            menuStopped.Click += (p1, p2) => helper.SetStatues(items, Enums.Status.Stoped);
             ContextMenu menu = new ContextMenu()
             {
                 IsOpen = true,
@@ -281,7 +226,7 @@ namespace DesktopInformation
                 }
             };
         }
-        
+
         /// <summary>
         /// 单击设置按钮事件
         /// </summary>
@@ -289,11 +234,11 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void BtnSettingsClickEventHandler(object sender, RoutedEventArgs e)
         {
-            WinSettings win = new WinSettings(set);
+            WinSettings win = new WinSettings() { Owner = this };
             win.ShowDialog();
             if (win.DialogResult.HasValue && win.DialogResult.Value)
             {
-                manager.ResetTimerInterval();
+                App.Instance.Manager.ResetTimerInterval();
             }
         }
         /// <summary>
@@ -303,17 +248,52 @@ namespace DesktopInformation
         /// <param name="e"></param>
         private void LvwPreviewKeyDownEventHandler(object sender, KeyEventArgs e)
         {
-            if(lvw.SelectedIndex!=-1)
+            if (lvw.SelectedIndex != -1)
             {
-                if(e.Key==Key.Delete)
+                if (e.Key == Key.Delete)
                 {
                     BtnDeleteClickEventHandler(null, null);
                 }
-                else if(e.Key==Key.Enter)
+                else if (e.Key == Key.Enter)
                 {
                     BtnEditClickEventHandler(null, null);
                 }
             }
+        }
+
+        private void btnFind_Click(object sender, RoutedEventArgs e)
+        {
+            new WinFind() { Owner = this }.ShowDialog();
+        }
+
+        private void ComboBoxItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+            switch ((sender as ComboBoxItem).Content as string)
+            {
+                case "文本":
+                    helper.OpenEditWindow(Enums.ObjType.Text);
+                    break;
+                case "纯文本":
+                    helper.OpenEditWindow(Enums.ObjType.PlainText);
+                    break;
+                case "进度条":
+                    helper.OpenEditWindow(Enums.ObjType.Bar);
+                    break;
+                case "饼图":
+                    helper.OpenEditWindow(Enums.ObjType.Pie);
+                    break;
+                case "建立副本":
+                    if (lvw.SelectedIndex != -1)
+                    {
+                        foreach (var i in lvw.SelectedItems)
+                        {
+                            helper.Clone(i as ObjInfo);
+                        }
+                    }
+                    break;
+            }
+            cbbAdd.Text = "";
         }
     }
 }

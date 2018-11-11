@@ -1,70 +1,74 @@
 ﻿using System;
+using System.Windows.Media;
 using static DesktopInformation.Enums;
-using static DesktopInformation.Tool.Tools;
+using System.Windows;
 
-namespace DesktopInformation.Binding
+namespace DesktopInformation.Info
 {
-    [Serializable]
-    public class ObjListBinding
+    public class ObjInfo
     {
-        public ObjListBinding(bool initialize=false)
+        public ObjInfo() : this(false)
         {
-            if(initialize)
+
+        }
+        public ObjInfo(bool initialize)
+        {
+            if (initialize)
             {
-                Statue = Statue.Running;
+                Status = Status.Running;
                 Name = "";
                 Value = "";
-                BorderColor = "#FFFFFFFF";
+                BorderColor = Brushes.White;
                 BorderThickness = 0;
-                Left = ScreenWidth - 300;
+                Left = SystemParameters.PrimaryScreenWidth - 300;
                 Top = 0;
                 Width = 300;
                 Height = 300;
                 Animation = true;
-                ForcedAbsolute = false;
+                Absolute = false;
                 Orientation = 0;
                 Reverse = false;
             }
         }
 
-        public ObjListBinding Clone()
+        public ObjInfo Clone()
         {
-            return new ObjListBinding()
+            return new ObjInfo()
             {
                 Type = Type,
-                Statue = Statue,
+                Status = Status,
                 Name = Name.Clone() as string,
                 Value = Value.Clone() as string,
                 Left = Left,
                 Top = Top,
                 Width = Width,
                 Height = Height,
-                ForegroundColor = ForegroundColor.Clone() as string,
-                BackgounrdColor = BackgounrdColor.Clone() as string,
-                BorderColor = BorderColor.Clone() as string,
+                Foreground = Foreground.Clone(),
+                Backgounrd = Backgounrd.Clone(),
+                BorderColor = BorderColor.Clone(),
                 BorderThickness = BorderThickness,
-                ForcedAbsolute = ForcedAbsolute,
+                Absolute = Absolute,
                 Animation = Animation,
                 Orientation = Orientation,
                 Reverse = Reverse,
             };
         }
-        
-        public InfoType Type { get; set; }
-        public Statue Statue { get; set; }
-        public string ShownType
+
+        public ObjType Type { get; set; }
+        public Status Status { get; set; }
+        public string TypeText
         {
             get
             {
                 switch (Type)
                 {
-                    case InfoType.Bar:
+                    case ObjType.Bar:
                         return "直条";
-                    case InfoType.Pie:
+                    case ObjType.Pie:
                         return "饼图";
-                    case InfoType.PlainText:
+                    case ObjType.PlainText:
                         return "纯文本";
-                    case InfoType.Text:
+                    case ObjType.Text:
                         return "文本";
                 }
                 return null;
@@ -72,17 +76,17 @@ namespace DesktopInformation.Binding
         }
         public string Name { get; set; }
         public string Value { get; set; }
-        public string ShownStatue
+        public string StatusText
         {
             get
             {
-                switch (Statue)
+                switch (Status)
                 {
-                    case Statue.Pausing:
+                    case Status.Pausing:
                         return "暂停中";
-                    case Statue.Running:
+                    case Status.Running:
                         return "运行中";
-                    case Statue.Stoped:
+                    case Status.Stoped:
                         return "已停止";
                 }
                 return null;
@@ -95,18 +99,24 @@ namespace DesktopInformation.Binding
         public double Height { get; set; }
 
 
-        
-        public string ForegroundColor { get; set; }
-        public string BackgounrdColor { get; set; }
+
+        public SolidColorBrush Foreground { get; set; }
+        public SolidColorBrush Backgounrd { get; set; }
 
         public double BorderThickness { get; set; }
-        public string BorderColor { get; set; }
-        
-        public bool ForcedAbsolute { get; set; } 
+        public SolidColorBrush BorderColor { get; set; }
+
+        public bool Absolute { get; set; }
         public bool Animation { get; set; }
 
         public int Orientation { get; set; }
         public bool Reverse { get; set; }
+
+        public double InnerR { get; set; }
+        public double ShadowBlurRadius { get; set; } = 0;
+        public double ShadowDepth { get; set; } = 0;
+        public double ShadowDirection { get; set; } = 0;
+        public Color ShadowColor { get; set; } = Colors.Transparent;
     }
-    
+
 }

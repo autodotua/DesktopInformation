@@ -1,0 +1,70 @@
+﻿<Window x:Class="DesktopInformation.Windows.WinObjList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:flat="clr-namespace:FzLib.Control.FlatStyle;assembly=FzWpfControlLib"
+        xmlns:win10style="clr-namespace:FzLib.Control.Win10Style;assembly=FzWpfControlLib"
+        mc:Ignorable="d"
+        Closing="WindowClosingEventHandler"
+         WindowStartupLocation="CenterScreen"
+        Title="桌面信息员" Height="350" Width="525">
+
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="4"/>
+
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+        <win10style:AzureDataGrid x:Name="lvw"    CanUserAddRows="False"
+                                    CanUserDeleteRows="False" AutoGenerateColumns="False"
+                                  SelectionChanged="LvwSelectionChangedEventHandler" PreviewKeyDown="LvwPreviewKeyDownEventHandler">
+            <win10style:AzureDataGrid.Columns>
+                <DataGridTextColumn  Header="类型"  Binding="{Binding TypeText}"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="名称"  Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="值"  Binding="{Binding Value}"  IsReadOnly="True"/>
+                <DataGridTextColumn Header="状态"  Binding="{Binding StatusText}" IsReadOnly="True"/>
+
+            </win10style:AzureDataGrid.Columns>
+
+
+        </win10style:AzureDataGrid>
+
+
+        <Grid Grid.Row="3" Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <flat:Button x:Name="btnSettings"  Content="设置"  Click="BtnSettingsClickEventHandler"/>
+            <flat:Button x:Name="btnFind" Content="查询" Grid.Column="2" Click="btnFind_Click"/>
+            <flat:Button x:Name="btnChangeStatues" Grid.Column="4" Content="状态" IsEnabled="False"  Click="BtnSetStatuesClickEventHandler"/>
+            <flat:Button x:Name="btnAdjust" Grid.Column="6" Content="调整"  Click="BtnAdjustClickEventHandler"/>
+            <flat:Button x:Name="btnEdit" Grid.Column="8" Content="编辑"  IsEnabled="False"  Click="BtnEditClickEventHandler"/>
+            <flat:Button x:Name="btnDelete" Grid.Column="10" Content="删除"  IsEnabled="False" Click="BtnDeleteClickEventHandler" />
+            <flat:UneditableComboBox x:Name="cbbAdd" Text="新建"  Background="#FFDDDDDD" Grid.Column="12"  Width="72" >
+                <ComboBoxItem PreviewMouseDown="ComboBoxItem_PreviewMouseDown"   >文本</ComboBoxItem>
+                <ComboBoxItem PreviewMouseDown="ComboBoxItem_PreviewMouseDown" >纯文本</ComboBoxItem>
+                <ComboBoxItem PreviewMouseDown="ComboBoxItem_PreviewMouseDown" >进度条</ComboBoxItem>
+                <ComboBoxItem PreviewMouseDown="ComboBoxItem_PreviewMouseDown" >饼图</ComboBoxItem>
+                <ComboBoxItem PreviewMouseDown="ComboBoxItem_PreviewMouseDown" >建立副本</ComboBoxItem>
+            </flat:UneditableComboBox>
+            <TextBlock  Grid.Column="12"  Width="72" Text="   新建" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False"/>
+
+        </Grid>
+
+    </Grid>
+</Window>

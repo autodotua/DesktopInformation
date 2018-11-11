@@ -7,10 +7,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopInformation.AddObjWindow"
                 xmlns:uc="clr-namespace:DesktopInformation.UserControls"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-xmlns:color="clr-namespace:CustomWPFColorPicker;assembly=CustomWPFColorPicker"
+                   xmlns:flat="clr-namespace:FzLib.Control.FlatStyle;assembly=FzWpfControlLib"
+         xmlns:picker="clr-namespace:FzLib.Control.Picker;assembly=FzWpfControlLib"
+  xmlns:text="clr-namespace:FzLib.Control.Text;assembly=FzWpfControlLib"
+
+                   xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-                    WindowStartupLocation="CenterScreen"
+                    WindowStartupLocation="CenterOwner"
         Title="新建文本 - 桌面信息员" Height="300" Width="300">
     <local:WinAddObjBase.Resources>
         <Style x:Key="txtColorStyle" TargetType="{x:Type TextBox}">
@@ -35,7 +38,7 @@ xmlns:color="clr-namespace:CustomWPFColorPicker;assembly=CustomWPFColorPicker"
             <RowDefinition Height="4"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <uc:UcHintTextBox x:Name="txtValue"  TextWrapping="True" TextVerticalContentAlignment="Top"/>
+        <text:HintTextBox x:Name="txtValue" HintText="文本" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top"/>
 
         <Grid Grid.Row="2">
             <Grid.RowDefinitions>
@@ -54,18 +57,18 @@ xmlns:color="clr-namespace:CustomWPFColorPicker;assembly=CustomWPFColorPicker"
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="背景颜色：" VerticalAlignment="Center"/>
-            <TextBox x:Name="txtBack"  Grid.Column="2" VerticalAlignment="Center"  BorderBrush="{Binding Text, ElementName=txtBack, Mode=OneWay}" Text="#00FFFFFF" Style="{DynamicResource txtColorStyle}"/>
+            <picker:ColorPickerTextBox x:Name="txtBack"  Grid.Column="2" VerticalAlignment="Center"   ColorBrush="#00FFFFFF" />
             <TextBlock Text="前景颜色：" Grid.Row="2" VerticalAlignment="Center"/>
-            <TextBox x:Name="txtFore" Grid.Row="2"  Grid.Column="2" VerticalAlignment="Center"  BorderBrush="{Binding Text, ElementName=txtFore, Mode=OneWay}" Text="#FF000000" Style="{DynamicResource txtColorStyle}"/>
+            <picker:ColorPickerTextBox  x:Name="txtFore" Grid.Row="2"  Grid.Column="2" VerticalAlignment="Center"   ColorBrush="#FF000000" />
             <TextBlock Text="边框粗细：" Grid.Row="4" VerticalAlignment="Center"/>
-            <TextBox x:Name="txtBorderThickness" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center"   Text="0" Style="{DynamicResource txtColorStyle}"/>
+            <flat:TextBox x:Name="txtBorderThickness" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center"   Text="0" />
             <TextBlock Text="边框颜色：" Grid.Row="6" VerticalAlignment="Center"/>
-            <TextBox x:Name="txtBorderColor" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"   Text="#FFFFFFFF" BorderBrush="{Binding Text, ElementName=txtBorderColor, Mode=OneWay}"   Style="{DynamicResource txtColorStyle}"/>
-            <CheckBox x:Name="chkAnimation" IsChecked="True" Grid.Row="8" Grid.ColumnSpan="3" Content="刷新动画"/>
-            <CheckBox x:Name="chkAbs" IsChecked="False" Grid.Row="10" Grid.ColumnSpan="3" Content="对数字取绝对值"/>
+            <picker:ColorPickerTextBox  x:Name="txtBorderColor" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"   ColorBrush="#FFFFFFFF"/>
+            <flat:CheckBox x:Name="chkAnimation" IsChecked="True" Grid.Row="8" Grid.ColumnSpan="3" Content="刷新动画"/>
+            <flat:CheckBox x:Name="chkAbs" IsChecked="False" Grid.Row="10" Grid.ColumnSpan="3" Content="对数字取绝对值"/>
 
         </Grid>
 
@@ -79,10 +82,12 @@ xmlns:color="clr-namespace:CustomWPFColorPicker;assembly=CustomWPFColorPicker"
                 <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <uc:UcHintTextBox x:Name="txtName" HintText="请输入名称"/>
-            <Button Grid.Column="2" Content="帮助"/>
-            <Button Grid.Column="4" Content="添加"/>
-            <Button Grid.Column="6" Content="确定" Click="BtnOkClickEventHandler"/>
+            <text:HintTextBox x:Name="txtName" HintText="请输入名称"/>
+            <flat:Button Grid.Column="2" Content="帮助"/>
+            <flat:UneditableComboBox x:Name="cbbAdd" Grid.Column="4"  Width="72" SelectedIndex="0" SelectionChanged="cbbAdd_SelectionChanged">
+                <ComboBoxItem>添加</ComboBoxItem>
+            </flat:UneditableComboBox>
+            <flat:Button Grid.Column="6" Content="确定" Click="BtnOkClickEventHandler"/>
 
         </Grid>
 

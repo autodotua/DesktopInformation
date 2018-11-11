@@ -6,7 +6,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopInformation.AddObjWindow"
-                     xmlns:uc="clr-namespace:DesktopInformation.UserControls"
+                xmlns:flat="clr-namespace:WpfControls.FlatStyle;assembly=WpfControls"
+         xmlns:picker="clr-namespace:WpfControls.Picker;assembly=WpfControls"
+
+                   xmlns:uc="clr-namespace:DesktopInformation.UserControls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         SizeToContent="Height" 
         Title="新建饼图 - 桌面信息员" Width="300">
@@ -46,7 +49,7 @@
             </Grid.ColumnDefinitions>
             <uc:UcHintTextBox x:Name="txtMin" HintText="最低值" Grid.Column="0"/>
             <uc:UcHintTextBox x:Name="txtValue" HintText="当前值" Grid.Column="2"/>
-            <ComboBox x:Name="cbbValue" Grid.Column="2"/>
+            <flat:UneditableComboBox x:Name="cbbValue" Grid.Column="2"/>
             <uc:UcHintTextBox x:Name="txtMax" HintText="最大值" Grid.Column="4"/>
         </Grid>
         <Grid Grid.Row="2">

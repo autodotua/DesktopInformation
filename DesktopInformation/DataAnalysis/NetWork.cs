@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace DesktopInformation.Tool
+namespace DesktopInformation.DataAnalysis
 {
     /// <summary>  
     /// Represents a network adapter installed on the machine.  

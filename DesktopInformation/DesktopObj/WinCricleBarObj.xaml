@@ -1,4 +1,5 @@
-﻿<src:WinPercentageDataTypeObjBase x:Class="DesktopInformation.DesktopObj.WinBarObj"
+﻿<src:WinPercentageDataTypeObjBase
+    x:Class="DesktopInformation.DesktopObj.WinCricleBarObj"
                 xmlns:src="clr-namespace:DesktopInformation.DesktopObj"
 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,9 +7,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopInformation.DesktopObj"
-        xmlns:usercontrols="clr-namespace:DesktopInformation.UserControls"
-        mc:Ignorable="d"
+    xmlns:usercontrols="clr-namespace:DesktopInformation.UserControls"
+    mc:Ignorable="d"
         Title="WinBarObj" >
 
-    <ProgressBar x:Name="bar" Maximum="1"  HorizontalAlignment="Stretch" />
+    <usercontrols:CircleProgressBar  x:Name="bar" Maximum="1" Tag="20" HorizontalAlignment="Stretch" />
 </src:WinPercentageDataTypeObjBase>

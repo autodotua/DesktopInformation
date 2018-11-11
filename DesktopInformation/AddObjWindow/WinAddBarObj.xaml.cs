@@ -1,4 +1,5 @@
-﻿using DesktopInformation.Tool;
+﻿using DesktopInformation.DataAnalysis;
+using FzLib.Control.Dialog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace DesktopInformation.AddObjWindow
     {
         string[] supportList = DeviceInfo.SupportInfo.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
 
-        public WinAddBarObj(Binding.ObjListBinding item) : base(item)
+        public WinAddBarObj(Info.ObjInfo item) : base(item)
         {
             InitializeComponent();
             txtName.Text = item.Name;
@@ -40,10 +41,15 @@ namespace DesktopInformation.AddObjWindow
                 {
                     cbbValue.SelectedItem = temp[1];
                 }
+                else
+                {
+                    txtValue.Text = temp[1];
+                    chkValue.IsChecked = true;
+                }
             }
-            txtBack.Text = item.BackgounrdColor ?? "#22000000";
-            txtFore.Text = item.ForegroundColor ?? "#EE00FF00";
-            txtBorderColor.Text = item.BorderColor;
+            txtBack.ColorBrush = item.Backgounrd ?? new SolidColorBrush(Color.FromArgb(0x22,0,0,0));
+            txtFore.ColorBrush = item.Foreground ?? new SolidColorBrush(Color.FromArgb(0xEE, 0, 0xFF, 0));
+            txtBorderColor.ColorBrush= item.BorderColor;
             txtBorderThickness.Text = item.BorderThickness.ToString();
             chkAnimation.IsChecked = item.Animation;
             cbbOrientation.SelectedIndex = item.Orientation;
@@ -54,9 +60,19 @@ namespace DesktopInformation.AddObjWindow
         {
             string min = txtMin.Text;
             string max = txtMax.Text;
-            if (cbbValue.SelectedItem == null)
+            if (chkValue.IsChecked.Value)
             {
-                return "为在组合框中选择任何项！";
+                if (txtValue.Text.Replace(" ", "") == "")
+                {
+                    return "未输入任何值！";
+                }
+            }
+            else
+            {
+                if (cbbValue.SelectedItem == null)
+                {
+                    return "未在组合框中选择任何项！";
+                }
             }
             if ((!double.TryParse(min, out double dMin)) && (!supportList.Contains(min)))
             {
@@ -71,10 +87,10 @@ namespace DesktopInformation.AddObjWindow
             {
                 return "最小值应小于最大值!";
             }
-            if (!(IsColor(txtBack.Text) && IsColor(txtFore.Text) && IsColor(txtBorderColor.Text)))
-            {
-                return "输入的颜色值有误!";
-            }
+            //if (!(IsColor(txtBack.Text) && IsColor(txtFore.Text) && IsColor(txtBorderColor.Text)))
+            //{
+            //    return "输入的颜色值有误!";
+            //}
             if (!(double.TryParse(txtBorderThickness.Text, out double thickness) && thickness >= 0 & thickness <= 10))
             {
                 return "输入的边框粗细应≥0且≤10!";
@@ -88,10 +104,17 @@ namespace DesktopInformation.AddObjWindow
             if (check == null)
             {
                 item.Name = txtName.Text;
-                item.Value = txtMin.Text + "|" + cbbValue.SelectedItem as string + "|" + txtMax.Text;
-                item.BackgounrdColor = txtBack.Text;
-                item.ForegroundColor = txtFore.Text;
-                item.BorderColor = txtBorderColor.Text;
+                if (chkValue.IsChecked.Value)
+                {
+                    item.Value = txtMin.Text + "|" + txtValue.Text+ "|" + txtMax.Text;
+                }
+                else
+                {
+                    item.Value = txtMin.Text + "|" + cbbValue.SelectedItem as string + "|" + txtMax.Text;
+                }
+                item.Backgounrd = txtBack.ColorBrush;
+                item.Foreground = txtFore.ColorBrush;
+                item.BorderColor = txtBorderColor.ColorBrush;
                 item.BorderThickness = double.Parse(txtBorderThickness.Text);
                 item.Animation = chkAnimation.IsChecked.Value;
                 item.Orientation = cbbOrientation.SelectedIndex;
@@ -101,7 +124,7 @@ namespace DesktopInformation.AddObjWindow
             }
             else
             {
-                Tools.ShowAlert(check);
+                DialogHelper.ShowError(check);
             }
         }
     }

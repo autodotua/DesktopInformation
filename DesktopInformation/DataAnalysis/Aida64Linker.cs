@@ -1,62 +1,59 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DesktopInformation.Tool
+namespace DesktopInformation.DataAnalysis
 {
     public class Aida64Linker
     {
         RegistryKey rk;
 
-        public Aida64Linker(Action aidaOpened)
+        public Aida64Linker()
         {
-            Thread t = new Thread(() =>
+            Task.Run(() =>
             {
                 bool aidaNotOpen = false;
                 while ((rk = Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues")) == null)
                 {
                     aidaNotOpen = true;
-                    Thread.Sleep(2000);
+                    Task.Delay(2000);
                 }
-                supportValueName = rk.GetValueNames()
+                SupportValueName = rk.GetValueNames()
              .Where(p => p.Contains("Value."))
              .Select(p => p = p.Replace("Value.", "")).ToArray();
-                if(aidaNotOpen)
+                if (aidaNotOpen)
                 {
-                  aidaOpened();
+                    App.Instance.Dispatcher.Invoke(App.Instance.Manager.RefreshWindows);
                 }
             });
-            t.Start();
         }
 
-        public string[] SupportValueName => supportValueName;
-
-        private string[] supportValueName;
+        public string[] SupportValueName { get; private set; }
 
         public string GetValue(string key)
         {
-            if(rk==null)
+            if (rk == null)
             {
-                return null;
+                return "";// null;
             }
+      
             try
             {
-                return rk.GetValue("Value."+ key).ToString();
+                return rk.GetValue("Value." + key).ToString();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                return "";// null;
             }
-
+       
         }
 
         public static string[] GetSupportValueName()
         {
-            return Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues")==null?Array.Empty<string>():
+            return Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues") == null ? Array.Empty<string>() :
             Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues").GetValueNames()
                 .Where(p => p.Contains("Value."))
                 .Select(p => p = p.Replace("Value.", "")).ToArray();

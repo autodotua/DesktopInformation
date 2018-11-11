@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DesktopInformation.DataAnalysis;
+using FzLib.Control.Dialog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static DesktopInformation.Tool.Tools;
 
 namespace DesktopInformation.AddObjWindow
 {
@@ -20,18 +21,24 @@ namespace DesktopInformation.AddObjWindow
     /// </summary>
     public partial class WinAddTextObj : WinAddObjBase
     {
-        public WinAddTextObj(Binding.ObjListBinding item, string hintText) : base(item)
+        string[] supportList = DeviceInfo.SupportInfo.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+
+        public WinAddTextObj(Info.ObjInfo item, string hintText) : base(item)
         {
             InitializeComponent();
             HintText = hintText;
             txtName.Text = item.Name;
             txtValue.Text = item.Value;
-            txtBack.Text = item.BackgounrdColor??"#00000000";
-            txtFore.Text = item.ForegroundColor??"#FFFFFFFF";
-            txtBorderColor.Text = item.BorderColor;
+            txtBack.ColorBrush= item.Backgounrd ??Brushes.Transparent;
+            txtFore.ColorBrush = item.Foreground ?? Brushes.White;
+            txtBorderColor.ColorBrush = item.BorderColor;
             txtBorderThickness.Text = item.BorderThickness.ToString();
-            chkAbs.IsChecked = item.ForcedAbsolute;
+            chkAbs.IsChecked = item.Absolute;
             chkAnimation.IsChecked = item.Animation;
+            foreach (var support in supportList)
+            {
+                cbbAdd.Items.Add(support);
+            }
         }
 
 
@@ -48,31 +55,42 @@ namespace DesktopInformation.AddObjWindow
         {
             if (txtName.Text.Replace(" ", "") == "" || txtValue.Text.Replace(" ", "") == "")
             {
-                ShowAlert("请填写名称和内容！");
+                DialogHelper.ShowError("请填写名称和内容！");
                 return;
             }
-            if (!(IsColor(txtBack.Text) && IsColor(txtFore.Text) && IsColor(txtBorderColor.Text)))
+            //if (!(IsColor(txtBack.Text) && IsColor(txtFore.Text) && IsColor(txtBorderColor.Text)))
+            //{
+            //    ShowAlert("输入的颜色值有误!");
+            //    return;
+            //}
+            if (!(double.TryParse(txtBorderThickness.Text, out double thickness) && thickness >= 0 & thickness <= 10))
             {
-                ShowAlert("输入的颜色值有误!");
-                return;
-            }
-            if(!(double.TryParse(txtBorderThickness.Text,out double thickness) && thickness>=0 & thickness<=10))
-            {
-                ShowAlert("输入的边框粗细应≥0且≤10!");
+                DialogHelper.ShowError("输入的边框粗细应≥0且≤10!");
                 return;
             }
 
-            item.BorderColor = txtBorderColor.Text;
+            item.BorderColor = txtBorderColor.ColorBrush;
             item.BorderThickness = thickness;
             item.Name = txtName.Text;
             item.Value = txtValue.Text;
-            item.BackgounrdColor = txtBack.Text;
-            item.ForegroundColor = txtFore.Text;
-            item.ForcedAbsolute = chkAbs.IsChecked.Value;
+            item.Backgounrd = txtBack.ColorBrush;
+            item.Foreground = txtFore.ColorBrush;
+            item.Absolute = chkAbs.IsChecked.Value;
             item.Animation = chkAnimation.IsChecked.Value;
             DialogResult = true;
             Close();
         }
 
+        private void cbbAdd_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbbAdd.SelectedIndex == 0)
+            {
+                return;
+            }
+
+            txtValue.SelectedText = "{"+cbbAdd.SelectedItem as string+"}";
+
+            cbbAdd.SelectedIndex = 0;
+        }
     }
 }

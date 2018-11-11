@@ -18,7 +18,7 @@ namespace DesktopInformation.UserControls
     /// <summary>
     /// UcHintTextBox.xaml 的交互逻辑
     /// </summary>
-    public partial class UcHintTextBox : UserControl
+    public partial class UcHintTextBox : System.Windows.Controls.TextBox
     {
         public UcHintTextBox()
         {

@@ -6,11 +6,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopInformation.DesktopObj"
         xmlns:uc="clr-namespace:DesktopInformation.UserControls"
-       
-                mc:Ignorable="d" >
+        mc:Ignorable="d" >
 
-        <Viewbox>
-        <Grid>
+    <Viewbox>
+        <Grid x:Name="grd">
             <TextBlock x:Name="tbk" Background="Transparent"  Foreground="White"/>
             <uc:RradualChangedTextBlock x:Name="tbkAni" Background="Transparent" BorderThickness="0" Foreground="White"/>
         </Grid>

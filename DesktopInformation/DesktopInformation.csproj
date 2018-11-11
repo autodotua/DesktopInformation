@@ -8,11 +8,12 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DesktopInformation</RootNamespace>
     <AssemblyName>DesktopInformation</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,39 +34,46 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <ApplicationIcon>NonCodeFile\icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Catel.Core, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Catel.Core.5.0.0\lib\net46\Catel.Core.dll</HintPath>
+    <Reference Include="FzStandardLib">
+      <HintPath>..\..\模块\Release\x64\FzStandardLib.dll</HintPath>
     </Reference>
-    <Reference Include="CustomWPFColorPicker">
-      <HintPath>..\..\EasyMuisc\EasyMuisc\bin\Debug\CustomWPFColorPicker.dll</HintPath>
+    <Reference Include="FzWpfControlLib">
+      <HintPath>..\..\模块\Release\x64\FzWpfControlLib.dll</HintPath>
     </Reference>
+    <Reference Include="FzWpfLib">
+      <HintPath>..\..\模块\Release\x64\FzWpfLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net46\System.Reactive.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Interfaces, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.Interfaces.3.1.1\lib\net45\System.Reactive.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Linq, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.Linq.3.1.1\lib\net46\System.Reactive.Linq.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.PlatformServices, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.PlatformServices.3.1.1\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Reactive.Windows.Threading, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.Windows.Threading.3.1.1\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -86,24 +94,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AddObjWindow\WinAddPieObj.xaml.cs">
-      <DependentUpon>WinAddPieObj.xaml</DependentUpon>
+    <Compile Include="DesktopObj\WinCricleBarObj.xaml.cs">
+      <DependentUpon>WinCricleBarObj.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DesktopObj\WinPieObj.xaml.cs">
-      <DependentUpon>WinPieObj.xaml</DependentUpon>
+    <Compile Include="Infos\ObjListInfo.cs" />
+    <Compile Include="DataAnalysis\Aida64Linker.cs" />
+    <Compile Include="DataAnalysis\Config.cs" />
+    <Compile Include="DataAnalysis\DataManager.cs" />
+    <Compile Include="UserControls\CircleProgressBar.xaml.cs">
+      <DependentUpon>CircleProgressBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tool\Aida64Linker.cs" />
-    <Compile Include="Tool\DataManager.cs" />
-    <Compile Include="UserControls\ProgressPie.xaml.cs">
-      <DependentUpon>ProgressPie.xaml</DependentUpon>
+    <Compile Include="Windows\WinFind.xaml.cs">
+      <DependentUpon>WinFind.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WinSettings.xaml.cs">
+    <Compile Include="Windows\WinSettings.xaml.cs">
       <DependentUpon>WinSettings.xaml</DependentUpon>
     </Compile>
-    <Page Include="AddObjWindow\WinAddPieObj.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="AddObjWindow\WinAddBarObj.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -112,7 +118,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DesktopObj\WinPieObj.xaml">
+    <Page Include="DesktopObj\WinCricleBarObj.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -128,7 +134,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\ProgressPie.xaml">
+    <Page Include="UserControls\CircleProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -136,11 +142,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\UcHintTextBox.xaml">
+    <Page Include="Windows\WinFind.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WinObjList.xaml">
+    <Page Include="Windows\WinObjList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -152,9 +158,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Binding\Enums.cs" />
-    <Compile Include="Binding\ObjListBinding.cs" />
-    <Compile Include="Binding\ObjListBindingHelper.cs" />
+    <Compile Include="Infos\Enums.cs" />
+    <Compile Include="Infos\ObjListBindingHelper.cs" />
     <Compile Include="DesktopObj\WinBarObj.xaml.cs">
       <DependentUpon>WinBarObj.xaml</DependentUpon>
     </Compile>
@@ -167,23 +172,19 @@
     <Compile Include="DesktopObj\WinTextObj.xaml.cs">
       <DependentUpon>WinTextObj.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tool\DeviceInfo.cs" />
-    <Compile Include="Tool\NetWork.cs" />
-    <Compile Include="Tool\Tools.cs" />
+    <Compile Include="DataAnalysis\DeviceInfo.cs" />
+    <Compile Include="DataAnalysis\NetWork.cs" />
     <Compile Include="AddObjWindow\WinAddTextObj.xaml.cs">
       <DependentUpon>WinAddTextObj.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\RradualChangedTextBlock.xaml.cs">
       <DependentUpon>RradualChangedTextBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\UcHintTextBox.xaml.cs">
-      <DependentUpon>UcHintTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WinObjList.xaml.cs">
+    <Compile Include="Windows\WinObjList.xaml.cs">
       <DependentUpon>WinObjList.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="WinSettings.xaml">
+    <Page Include="Windows\WinSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -197,21 +198,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.manifest" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
