@@ -22,7 +22,7 @@ namespace DesktopInformation.DesktopObj
     {
         public WinPlainTextObj(Info.ObjInfo item, bool adjust) : base(item,adjust)
         {
-            UpdateDisplay();
+            LoadUI();
 
             InitializeComponent();
         }
@@ -36,7 +36,7 @@ namespace DesktopInformation.DesktopObj
         {
 
         }
-        public override void UpdateDisplay()
+        public override void LoadUI()
         {
             if(tbk==null)
             {

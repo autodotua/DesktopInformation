@@ -19,7 +19,7 @@ namespace DesktopInformation.Info
         public void OpenEditWindow(ObjType type)
         {
             WinAddObjBase win = null;
-            ObjInfo item = new ObjInfo(true);
+            ObjInfo item = new ObjInfo();
             switch (type)
             {
                 case ObjType.Text:
@@ -35,7 +35,7 @@ namespace DesktopInformation.Info
                    win = new WinAddBarObj(item);
                    break;
             }
-            win.Owner = App.Current.MainWindow ;
+            win.Owner = App.Instance.SingleObject ;
             win.ShowDialog();
 
             if (win?.DialogResult == true)
@@ -63,7 +63,7 @@ namespace DesktopInformation.Info
                     win = new WinAddBarObj(item);
                     break;
             }
-            win.Owner = App.Current.MainWindow;
+            win.Owner = App.Instance.SingleObject;
 
             win.ShowDialog();
 

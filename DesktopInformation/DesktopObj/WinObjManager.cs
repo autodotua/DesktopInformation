@@ -62,16 +62,12 @@ namespace DesktopInformation.DesktopObj
 
         public void Adjust(ObjInfo item)
         {
-            //  if (wins.ContainsValue(item))
-            //  {
             isBusy = true;
             WinObjBase win = wins.First(p => p.Value == item).Key;
             var adjusting = win.Adjuesting;
-            win.Close();
-            wins.Remove(win);
+            RemoveWindow(win);
             AddWindow(item, !adjusting);
             isBusy = false;
-            // }
         }
 
         public void Adjust()
@@ -86,9 +82,7 @@ namespace DesktopInformation.DesktopObj
         public void RefreshWindow(ObjInfo item)
         {
             isBusy = true;
-            WinObjBase win = wins.First(p => p.Value == item).Key;
-            win.Close();
-            wins.Remove(win);
+            RemoveWindow(item);
             AddWindow(item, false);
             isBusy = false;
         }
@@ -100,7 +94,6 @@ namespace DesktopInformation.DesktopObj
             {
                 win.Key.Close();
             }
-            wins.Clear();
             foreach (var i in Config.Instance.Objs)
             {
                 if (i.Status != Enums.Status.Stoped)
@@ -160,9 +153,13 @@ namespace DesktopInformation.DesktopObj
             if (wins.ContainsValue(item))
             {
                 WinObjBase win = wins.First(p => p.Value == item).Key;
-                win.Close();
-                wins.Remove(win);
+                RemoveWindow(win);
             }
+        }
+        public void RemoveWindow(WinObjBase win)
+        {
+            win.Close();
+            wins.Remove(win);
         }
 
         public void ResetTimerInterval()

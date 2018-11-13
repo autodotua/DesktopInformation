@@ -11,6 +11,7 @@ namespace DesktopInformation
         [Serializable]
         public enum ObjType
         {
+            None,
             PlainText,
             Text,
             Bar,

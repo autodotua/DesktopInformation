@@ -7,30 +7,11 @@ namespace DesktopInformation.Info
 {
     public class ObjInfo
     {
-        public ObjInfo() : this(false)
+        public ObjInfo() 
         {
 
         }
-        public ObjInfo(bool initialize)
-        {
-            if (initialize)
-            {
-                Status = Status.Running;
-                Name = "";
-                Value = "";
-                BorderColor = Brushes.White;
-                BorderThickness = 0;
-                Left = SystemParameters.PrimaryScreenWidth - 300;
-                Top = 0;
-                Width = 300;
-                Height = 300;
-                Animation = true;
-                Absolute = false;
-                Orientation = 0;
-                Reverse = false;
-            }
-        }
-
+     
         public ObjInfo Clone()
         {
             return new ObjInfo()
@@ -51,11 +32,16 @@ namespace DesktopInformation.Info
                 Animation = Animation,
                 Orientation = Orientation,
                 Reverse = Reverse,
+                InnerR=InnerR,
+                ShadowBlurRadius=ShadowBlurRadius,
+                ShadowColor=ShadowColor,
+                ShadowDepth=ShadowDepth,
+                ShadowDirection=ShadowDirection,
             };
         }
 
-        public ObjType Type { get; set; }
-        public Status Status { get; set; }
+        public ObjType Type { get; set; } = ObjType.None;
+        public Status Status { get; set; } = Status.Running;
         public string TypeText
         {
             get
@@ -74,8 +60,8 @@ namespace DesktopInformation.Info
                 return null;
             }
         }
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string Name { get; set; } = "";
+        public string Value { get; set; } = "";
         public string StatusText
         {
             get
@@ -93,10 +79,10 @@ namespace DesktopInformation.Info
             }
         }
 
-        public double Left { get; set; }
-        public double Top { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
+        public double Left { get; set; }= SystemParameters.PrimaryScreenWidth - 200;
+        public double Top { get; set; } = 0;
+        public double Width { get; set; } = 200;
+        public double Height { get; set; } = 100;
 
 
 
@@ -104,15 +90,15 @@ namespace DesktopInformation.Info
         public SolidColorBrush Backgounrd { get; set; }
 
         public double BorderThickness { get; set; }
-        public SolidColorBrush BorderColor { get; set; }
+        public SolidColorBrush BorderColor { get; set; } = Brushes.White;
 
-        public bool Absolute { get; set; }
-        public bool Animation { get; set; }
+        public bool Absolute { get; set; } = false;
+        public bool Animation { get; set; } = true;
 
-        public int Orientation { get; set; }
-        public bool Reverse { get; set; }
+        public int Orientation { get; set; } = 0;
+        public bool Reverse { get; set; } = false;
 
-        public double InnerR { get; set; }
+        public double InnerR { get; set; } = 0;
         public double ShadowBlurRadius { get; set; } = 0;
         public double ShadowDepth { get; set; } = 0;
         public double ShadowDirection { get; set; } = 0;

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopInformation.DataAnalysis
+namespace DesktopInformation
 {
     class Config:FzLib.Data.Serialization.JsonSerializationBase
     {

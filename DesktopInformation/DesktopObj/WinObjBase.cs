@@ -52,9 +52,12 @@ namespace DesktopInformation.DesktopObj
                       style = new FzLib.Windows.WindowStyle(this);
                       style.SetStickOnDesktop(false);
                       style.Set(FzLib.Windows.WindowStyle.WindowModes.ToolWindow);
+
+                      LoadUI();
                   };
             }
         }
+
 
         private void WinObjBasePreviewKeyDownEventHandler(object sender, KeyEventArgs e)
         {
@@ -163,8 +166,8 @@ namespace DesktopInformation.DesktopObj
         //#endregion
 
         public abstract void Load();
-        public abstract void UpdateDisplay();
         public abstract void Update();
+        public abstract void LoadUI();
         public bool Adjuesting { get; set; }
         private void StartAdjust()
         {
@@ -174,6 +177,7 @@ namespace DesktopInformation.DesktopObj
             chrome.ResizeBorderThickness = new Thickness(4);
             Background = Brushes.LightGray;
         }
+
         private void StopAdjust()
         {
             Item.Left = Left;

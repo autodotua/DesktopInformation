@@ -24,10 +24,11 @@ namespace DesktopInformation.DesktopObj
         {
             InitializeComponent();
             bar.RenderTransformOrigin = new Point(0.5, 0.5);
+            
 
         }
 
-        public override void UpdateDisplay()
+        public override void LoadUI()
         {
             bar.Foreground = Item.Foreground;
             bar.Background = Item.Backgounrd;
@@ -58,6 +59,7 @@ namespace DesktopInformation.DesktopObj
                 bar.Value = value / (max - min);
             }
         }
-        
+
+
     }
 }
