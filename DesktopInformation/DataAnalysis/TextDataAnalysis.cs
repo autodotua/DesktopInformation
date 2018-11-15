@@ -23,14 +23,19 @@ namespace DesktopInformation.DataAnalysis
         }
         static TextDataAnalysis()
         {
-            normal = @"\{(?<Type>" + supportDateTime + "|" + SupportInfo + @")\}";
             Timing = @"\{(?<TimingName>[a-zA-Z0-9]+):(?<Type>" + supportTimeSpan + @")\}";
             NormalWithFormat = @"\{(?<Type>" + supportDateTime + "|" + SupportInfo + @"):(?<Length>[0-9]{1,2})\.(?<Decimal>[0-9])\}";
             TimingWithFormat = @"\{(?<TimingName>[a-zA-Z0-9]+):(?<Type>" + supportTimeSpan + @"):(?<Length>[0-9]{1,2})\.(?<Decimal>[0-9])\}";
-            rNormal = new Regex(normal, RegexOptions.Compiled);
+
             rTiming = new Regex(Timing, RegexOptions.Compiled);
             rNormalWithFormat = new Regex(NormalWithFormat, RegexOptions.Compiled);
             rTimingWithFormat = new Regex(TimingWithFormat, RegexOptions.Compiled);
+
+        }
+        public static void LoadRegex()
+        {
+            normal = @"\{(?<Type>" + supportDateTime + "|" + SupportInfo + @")\}";
+            rNormal = new Regex(normal, RegexOptions.Compiled);
         }
         /// <summary>
         /// 支持的日期时间型正则子串
@@ -43,7 +48,7 @@ namespace DesktopInformation.DataAnalysis
         /// <summary>
         /// 普通类型正则表达式
         /// </summary>
-        private static readonly string normal;
+        private static  string normal;
         /// <summary>
         /// 计时类型正则表达式
         /// </summary>
@@ -59,7 +64,7 @@ namespace DesktopInformation.DataAnalysis
         /// <summary>
         /// 普通类型正则
         /// </summary>
-        private static readonly Regex rNormal;
+        private static  Regex rNormal;
         /// <summary>
         /// 普通类型计时
         /// </summary>

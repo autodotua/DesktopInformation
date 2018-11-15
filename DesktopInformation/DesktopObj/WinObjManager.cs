@@ -90,6 +90,7 @@ namespace DesktopInformation.DesktopObj
         {
             isBusy = true;
             await dataManager.Load();
+            TextDataAnalysis.LoadRegex();
             foreach (var win in wins)
             {
                 win.Key.Close();

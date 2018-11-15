@@ -10,25 +10,35 @@ namespace DesktopInformation.DataAnalysis
     public class Aida64Linker
     {
         RegistryKey rk;
-
+        static int a = 0;
         public Aida64Linker()
         {
-            Task.Run(() =>
+            StartLinkThread();
+        }
+        bool isLinking = false;
+        public void StartLinkThread()
+        {
+            if (!isLinking)
             {
-                bool aidaNotOpen = false;
-                while ((rk = Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues")) == null)
+                Task.Run(async () =>
                 {
-                    aidaNotOpen = true;
-                    Task.Delay(2000);
-                }
-                SupportValueName = rk.GetValueNames()
-             .Where(p => p.Contains("Value."))
-             .Select(p => p = p.Replace("Value.", "")).ToArray();
-                if (aidaNotOpen)
-                {
-                    App.Instance.Dispatcher.Invoke(App.Instance.Manager.RefreshWindows);
-                }
-            });
+                    isLinking = true;
+                    bool aidaNotOpen = false;
+                    while ((rk = Registry.CurrentUser.OpenSubKey(@"Software\FinalWire\AIDA64\SensorValues")) == null)
+                    {
+                        aidaNotOpen = true;
+                        await Task.Delay(2000);
+                    }
+                    SupportValueName = rk.GetValueNames()
+                 .Where(p => p.Contains("Value."))
+                 .Select(p => p = p.Replace("Value.", "")).ToArray();
+                    if (aidaNotOpen)
+                    {
+                        await App.Instance.Dispatcher.Invoke(App.Instance.Manager.RefreshWindows);
+                    }
+                    isLinking = false;
+                });
+            }
         }
 
         public string[] SupportValueName { get; private set; }
@@ -37,7 +47,7 @@ namespace DesktopInformation.DataAnalysis
         {
             if (rk == null)
             {
-                return "";// null;
+                return "(AIDA64连接失败)";// null;
             }
       
             try
@@ -46,7 +56,9 @@ namespace DesktopInformation.DataAnalysis
             }
             catch (Exception ex)
             {
-                return "";// null;
+                rk = null;
+                StartLinkThread();
+                return "(AIDA64连接失败)";// null;
             }
        
         }
