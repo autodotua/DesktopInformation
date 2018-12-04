@@ -2,7 +2,7 @@
 using DesktopInformation.DesktopObj;
 using DesktopInformation.Windows;
 using FzLib.Extension;
-using FzLib.Program.Notify;
+using FzLib.Program.Runtime;
 using System.Diagnostics;
 using System.Windows;
 
@@ -25,7 +25,7 @@ namespace DesktopInformation
             Instance = this;
             FzLib.Program.Runtime.UnhandledException.RegistAll();
             FzLib.Program.Runtime.SingleInstance singleInstance = new FzLib.Program.Runtime.SingleInstance("DesktopInformation");
-            if (await singleInstance.CheckAndOpenWindow<WinObjList>(this))
+            if (await singleInstance.CheckAndOpenWindow<WinObjList>(this,this))
             {
                 return;
             }
@@ -44,8 +44,9 @@ namespace DesktopInformation
                  }
              });
             tray.AddContextMenuItem("退出", Shutdown);
+            tray.ReShowWhenDisplayChanged = true;
             tray.ClickToOpenOrHideWindow(this);
-
+            
             tray.Show();
 
             if (e.Args.Length == 0 || e.Args[0] != "startup")

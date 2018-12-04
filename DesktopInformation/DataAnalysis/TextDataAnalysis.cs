@@ -201,7 +201,7 @@ namespace DesktopInformation.DataAnalysis
                     Match match = rDate.Match(i);
                     if (timer.ContainsKey(match.Groups["Name"].Value))
                     {
-                        DialogHelper.ShowError("存在相同的计时名：" + match.Groups["Name"].Value + "！请立即更改。");
+                        DialogBox.ShowError("存在相同的计时名：" + match.Groups["Name"].Value + "！请立即更改。");
                         continue;
                     }
                     try
@@ -210,7 +210,7 @@ namespace DesktopInformation.DataAnalysis
                     }
                     catch (ArgumentOutOfRangeException)
                     {
-                        DialogHelper.ShowError("“" + match.Groups["Name"].Value + "”的日期不合法！");
+                        DialogBox.ShowError("“" + match.Groups["Name"].Value + "”的日期不合法！");
                         return;
                     }
                 }
@@ -219,7 +219,7 @@ namespace DesktopInformation.DataAnalysis
                     Match match = rDateTime.Match(i);
                     if (timer.ContainsKey(match.Groups["Name"].Value))
                     {
-                        DialogHelper.ShowError("存在相同的计时名：" + match.Groups["Name"].Value + "！请更改。");
+                        DialogBox.ShowError("存在相同的计时名：" + match.Groups["Name"].Value + "！请更改。");
                         continue;
                     }
                     try
@@ -234,7 +234,7 @@ namespace DesktopInformation.DataAnalysis
                     }
                     catch (ArgumentOutOfRangeException)
                     {
-                        DialogHelper.ShowError("“" + match.Groups["Name"].Value + "”的日期不合法！");
+                        DialogBox.ShowError("“" + match.Groups["Name"].Value + "”的日期不合法！");
                         return;
                     }
                 }

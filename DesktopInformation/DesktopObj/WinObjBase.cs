@@ -15,13 +15,13 @@ namespace DesktopInformation.DesktopObj
     {
         public ObjInfo Item { get; set; }
 
-        public WinObjBase(Info.ObjInfo item, DataManager dataManager, bool adjust) : this(item, adjust)
+        public WinObjBase(ObjInfo item, DataManager dataManager, bool adjust) : this(item, adjust)
         {
             this.dataManager = dataManager;
         }
         WindowChrome chrome = new WindowChrome();
         FzLib.Windows.WindowStyle style;
-        public WinObjBase(Info.ObjInfo item, bool adjust) : base()
+        public WinObjBase(ObjInfo item, bool adjust) : base()
         {
             DataContext = this;
             this.Item = item;
@@ -46,6 +46,7 @@ namespace DesktopInformation.DesktopObj
             }
             else
             {
+                IsHitTestVisible = false;
                 Loaded += (p1, p2) =>
                   {
 

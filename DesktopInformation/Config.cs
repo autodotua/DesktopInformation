@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DesktopInformation
 {
-    class Config:FzLib.Data.Serialization.JsonSerializationBase
+    class Config:FzLib.DataStorage.Serialization.JsonSerializationBase
     {
         public const string ConfigPath= "DesktopInformationConfig.json";
         public Config()
@@ -30,7 +30,7 @@ namespace DesktopInformation
             }
             catch(Exception ex)
             {
-                DialogHelper.ShowException("保存配置文件失败", ex);
+                DialogBox.ShowException("保存配置文件失败", ex);
             }
         }
     }

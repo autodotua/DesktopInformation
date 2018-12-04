@@ -55,7 +55,7 @@ namespace DesktopInformation.AddObjWindow
         {
             if (txtName.Text.Replace(" ", "") == "" || txtValue.Text.Replace(" ", "") == "")
             {
-                DialogHelper.ShowError("请填写名称和内容！");
+                DialogBox.ShowError("请填写名称和内容！");
                 return;
             }
             //if (!(IsColor(txtBack.Text) && IsColor(txtFore.Text) && IsColor(txtBorderColor.Text)))
@@ -65,7 +65,7 @@ namespace DesktopInformation.AddObjWindow
             //}
             if (!(double.TryParse(txtBorderThickness.Text, out double thickness) && thickness >= 0 & thickness <= 10))
             {
-                DialogHelper.ShowError("输入的边框粗细应≥0且≤10!");
+                DialogBox.ShowError("输入的边框粗细应≥0且≤10!");
                 return;
             }
 

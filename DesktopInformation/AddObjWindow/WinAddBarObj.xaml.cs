@@ -124,7 +124,7 @@ namespace DesktopInformation.AddObjWindow
             }
             else
             {
-                DialogHelper.ShowError(check);
+                DialogBox.ShowError(check);
             }
         }
     }
